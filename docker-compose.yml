@@ -1,0 +1,42 @@
+version: "3"
+
+volumes:
+  dbdata:
+
+services:
+  psqldb:
+    build:
+      context: ./database
+    environment:
+      - POSTGRES_DB=mydatabase
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword                     
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - psqldb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://psqldb:5432/mydatabase
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=mypassword
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  frontend:
+    build: 
+      context: ./frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+  bot-framework:
+    build:
+      context: ./bot-framework
+    ports:
+      - "3978:3978"
+    depends_on:
+      - backend

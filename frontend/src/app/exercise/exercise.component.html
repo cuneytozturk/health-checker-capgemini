@@ -1,0 +1,17 @@
+<h1>Health Checker</h1>
+    <h1>Workout Items</h1>
+    @for (item of exercises; track item.id) {
+        <div>
+        <ul>
+      <li >
+        <h2>{{ item.id }}</h2>
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.description }}</p>
+      </li>
+    </ul>
+</div>}
+  @empty {
+    <div>
+        <p>No workout items found.</p>
+      </div>
+  }
