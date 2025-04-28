@@ -29,7 +29,7 @@ public class ExerciseService {
                     exercise.getDescription(),
                     exercise.getVideoUrl()
             );
-            String url = "http://localhost:3978/api/notify";
+            String url = "http://host.docker.internal:3978/api/notify";
             restTemplate.postForObject(url, exerciseDTO, String.class);
         } else {
             throw new IllegalArgumentException("Exercise with id " + id + " not found");
