@@ -29,8 +29,7 @@ public class ExerciseService {
                     exercise.getDescription(),
                     exercise.getVideoUrl()
             );
-            System.out.println("Exercise DTO: " + exerciseDTO.toString());
-            String url = "http://localhost:8080/api/exercises/add";
+            String url = "http://localhost:3978/api/notify";
             restTemplate.postForObject(url, exerciseDTO, String.class);
         } else {
             throw new IllegalArgumentException("Exercise with id " + id + " not found");
