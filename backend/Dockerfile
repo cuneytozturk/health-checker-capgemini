@@ -14,10 +14,8 @@ FROM maven:3-eclipse-temurin-17-alpine AS dev
 WORKDIR /app
 COPY --from=deps /root/.m2/repository /root/.m2/repository
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
-
 RUN apk add inotify-tools
 RUN chmod +x /docker-entrypoint.sh
-
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 FROM openjdk:17-alpine
