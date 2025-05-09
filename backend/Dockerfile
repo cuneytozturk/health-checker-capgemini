@@ -8,7 +8,8 @@ FROM maven:3-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 COPY --from=deps /root/.m2/repository /root/.m2/repository
 COPY . .
-RUN mvn package -DskipTests -o
+RUN mvn test
+RUN mvn package -o
 
 FROM maven:3-eclipse-temurin-17-alpine AS dev
 WORKDIR /app
