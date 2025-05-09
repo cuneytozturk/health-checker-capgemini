@@ -41,6 +41,7 @@ jobs:
 
         - name: Set up Docker Buildx
           uses: docker/build-push-action@v6.16.0
+          working-directory: ./backend
           with:
             context: .
             file: /Dockerfile
