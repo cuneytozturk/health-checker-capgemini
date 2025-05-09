@@ -1,14 +1,19 @@
-
+volumes:
+  db_data:
 services:
-  psqldb:                   
-    image: 'postgres:latest'
-    container_name: database
+  database:
+    image: mysql
+    container_name: mysql
+    restart: always
     environment:
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DB=mydb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
     ports:
-      - "5433:5432"
+    - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
   backend:
     build:
       context: ./backend
@@ -16,17 +21,13 @@ services:
     volumes:
       - ./backend:/app
       - ~/.m2:/root/.m2
-    depends_on:
-      - psqldb
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://psqldb:5432/myuser
-      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
-      - SPRING_DATASOURCE_USERNAME=myuser
-      - SPRING_DATASOURCE_PASSWORD=mypassword
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - '8080:8080'
       - '5005:5005'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/app_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: pass
   frontend:
     build: 
       context: ./frontend
