@@ -43,6 +43,6 @@ jobs:
           uses: docker/build-push-action@v6.16.0
           with:
             context: ./backend
-            file: /Dockerfile
+            file: ./backend/Dockerfile
             push: true
             tags: ${{ secrets.DOCKER_USERNAME }}/backend:latest
