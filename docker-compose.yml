@@ -15,21 +15,17 @@ services:
     volumes:
       - db_data:/var/lib/mysql
   backend:
-    build:
-      context: ./backend
-    volumes:
-      - ./backend:/app
-      - ~/.m2:/root/.m2
+    image: cuneytozturk/backend
     ports:
       - '8080:8080'
-      - '5005:5005'
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/app_db
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: pass
+    depends_on:
+      - database
   frontend:
-    build: 
-      context: ./frontend
+    image: cuneytozturk/frontend
     ports:
       - "4200:4200"
   bot-framework:

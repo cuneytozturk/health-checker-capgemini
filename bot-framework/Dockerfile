@@ -1,7 +1,7 @@
-FROM node:18-alpine
+FROM node:20
 WORKDIR /app
 COPY . .
-RUN npm install -g typescript
+RUN npm install
 
 
 EXPOSE 3978
