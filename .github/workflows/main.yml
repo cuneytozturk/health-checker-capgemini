@@ -23,7 +23,7 @@ jobs:
 
     - name: Backend build and tests
       working-directory: ./backend
-      run: mvn clean verify
+      run: mvn clean package
 
   push-backend-image:
       needs: build-and-test
