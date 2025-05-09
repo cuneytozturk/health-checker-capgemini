@@ -17,6 +17,7 @@ services:
   backend:
     build:
       context: ./backend
+      target: dev
     volumes:
       - ./backend:/app
       - ~/.m2:/root/.m2
