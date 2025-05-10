@@ -13,7 +13,16 @@ public class Exercise {
         private String description;
         private String videoUrl;
 
-        @Override
+    public Exercise() {}
+
+    public Exercise(Long id, String name, String description, String videoUrl) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.videoUrl = videoUrl;
+    }
+
+    @Override
         public String toString() {
             return "Exercise{" +
                     "id=" + id +

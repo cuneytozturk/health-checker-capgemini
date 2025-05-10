@@ -6,6 +6,7 @@ import com.example.backend.repository.ExerciseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,14 @@ public class ExerciseService {
     public ExerciseService(ExerciseRepository exerciseRepository) {
         this.exerciseRepository = exerciseRepository;
         this.restTemplate = new RestTemplate();
+    }
+
+    public List<Exercise> findAll() {
+        return exerciseRepository.findAll();
+    }
+
+    public void save(Exercise exercise) {
+        exerciseRepository.save(exercise);
     }
 
     public void sendNotification(Long id) {

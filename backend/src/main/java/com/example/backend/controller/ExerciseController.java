@@ -22,12 +22,12 @@ public class ExerciseController {
 
     @GetMapping("/getall")
     public List<Exercise> getAllExercises() {
-        return exerciseRepository.findAll();
+        return exerciseService.findAll();
     }
 
     @PostMapping("/add")
     public String addExercise(@RequestBody Exercise exercise) {
-        exerciseRepository.save(exercise);
+        exerciseService.save(exercise);
         return "Exercise added successfully!";
     }
 
