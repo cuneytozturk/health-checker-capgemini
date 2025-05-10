@@ -2,9 +2,9 @@ name: Dev CI/CD Pipeline
 
 on:
   push:
-    branches: [cicdbackend]
+    branches: [main]
   pull_request:
-    branches: [cicdbackend]
+    branches: [main]
 
 jobs:
   build-test-push-backend:
