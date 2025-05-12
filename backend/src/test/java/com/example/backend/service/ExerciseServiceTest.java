@@ -30,9 +30,6 @@ class ExerciseServiceTest {
     @Mock
     private ExerciseRepository exerciseRepository;
 
-    @Mock
-    private RestTemplate restTemplate;
-
     @Test
     void findAllReturnsAllExercises() {
         //arrange
@@ -53,10 +50,13 @@ class ExerciseServiceTest {
 
     @Test
     void saveCallsRepositorySave() {
+        //arrange
         Exercise exercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "videoUrl");
 
+        //act
         exerciseService.save(exercise);
 
+        //assert
         ArgumentCaptor<Exercise> captor = ArgumentCaptor.forClass(Exercise.class);
         verify(exerciseRepository, times(1)).save(captor.capture());
         assertEquals("Push Up", captor.getValue().getName());

@@ -30,6 +30,10 @@
 		<java.version>17</java.version>
 		<go-offline-maven-plugin.version>1.2.8</go-offline-maven-plugin.version>
 		<spring-boot-devtools.version>3.0.1</spring-boot-devtools.version>
+		<sonar.host.url>http://localhost:9000</sonar.host.url>
+		<sonar.projectKey>healthchecker</sonar.projectKey>
+		<sonar.token>${env.SONAR_TOKEN}</sonar.token>
+		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -80,7 +84,13 @@
 			<version>3.4.5</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>0.8.12</version>
+		</dependency>
 	</dependencies>
+
 
 	<build>
 		<plugins>
@@ -98,7 +108,32 @@
 				<artifactId>go-offline-maven-plugin</artifactId>
 				<version>${go-offline-maven-plugin.version}</version>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.7</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<formats>
+								<format>XML</format>
+							</formats>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+
 	</build>
 
 </project>
