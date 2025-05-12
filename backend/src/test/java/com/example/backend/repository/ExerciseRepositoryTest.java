@@ -19,7 +19,7 @@ class ExerciseRepositoryTest {
     @Test
     void saveExercisePersistsData() {
         // Arrange
-        Exercise exercise = new Exercise(null, "Push Up", "A basic push up exercise.", "videoUrl");
+        Exercise exercise = new Exercise(null, "Push Up", "A basic push up exercise.","imageUrl" ,"videoUrl");
 
         // Act
         Exercise savedExercise = exerciseRepository.save(exercise);
@@ -32,7 +32,7 @@ class ExerciseRepositoryTest {
     @Test
     void findByIdReturnsExercise() {
         // Arrange
-        Exercise exercise = new Exercise(null, "Push Up", "A basic push up exercise.", "videoUrl");
+        Exercise exercise = new Exercise(null, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
         Exercise savedExercise = exerciseRepository.save(exercise);
 
         // Act
@@ -46,8 +46,8 @@ class ExerciseRepositoryTest {
     @Test
     void findAllReturnsAllExercises() {
         // Arrange
-        Exercise exercise1 = new Exercise(null, "Push Up", "A basic push up exercise.", "videoUrl");
-        Exercise exercise2 = new Exercise(null, "Squat", "A basic squat exercise.", "videoUrl");
+        Exercise exercise1 = new Exercise(null, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
+        Exercise exercise2 = new Exercise(null, "Squat", "A basic squat exercise.","imageUrl", "videoUrl");
         exerciseRepository.save(exercise1);
         exerciseRepository.save(exercise2);
 
@@ -61,7 +61,7 @@ class ExerciseRepositoryTest {
     @Test
     void deleteByIdRemovesExercise() {
         // Arrange
-        Exercise exercise = new Exercise(null, "Push Up", "A basic push up exercise.", "videoUrl");
+        Exercise exercise = new Exercise(null, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
         Exercise savedExercise = exerciseRepository.save(exercise);
 
         // Act

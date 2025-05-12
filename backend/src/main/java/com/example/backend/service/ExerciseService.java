@@ -36,6 +36,7 @@ public class ExerciseService {
             ExerciseDTO exerciseDTO = new ExerciseDTO(
                     exercise.getName(),
                     exercise.getDescription(),
+                    exercise.getImageUrl(),
                     exercise.getVideoUrl()
             );
             String url = "http://host.docker.internal:3978/api/notify";

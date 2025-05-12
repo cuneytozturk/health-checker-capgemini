@@ -34,8 +34,8 @@ class ExerciseServiceTest {
     void findAllReturnsAllExercises() {
         //arrange
         List<Exercise> mockExercises = List.of(
-                new Exercise(1L, "Push Up", "A basic push up exercise.", "videoUrl"),
-                new Exercise(2L, "Squat", "A basic squat exercise.", "videoUrl")
+                new Exercise(1L, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl"),
+                new Exercise(2L, "Squat", "A basic squat exercise.","imageUrl", "videoUrl")
         );
         when(exerciseRepository.findAll()).thenReturn(mockExercises);
 
@@ -51,7 +51,7 @@ class ExerciseServiceTest {
     @Test
     void saveCallsRepositorySave() {
         //arrange
-        Exercise exercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "videoUrl");
+        Exercise exercise = new Exercise(1L, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
 
         //act
         exerciseService.save(exercise);

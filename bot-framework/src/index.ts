@@ -96,12 +96,29 @@ server.get('/api/notify', (req, res, next) => {
     res.end();
 });
 
+// // Listen for incoming custom notifications and send proactive messages to users.
+// server.post('/api/notify', (req, res, next) => {
+//     for (const msg of req.body) {
+//         for (const conversationReference of Object.values(conversationReferences)) {
+//             adapter.continueConversationAsync(process.env.MicrosoftAppId, conversationReference, async (turnContext) => {
+//                 await turnContext.sendActivity(msg);
+//             });
+//         }
+//     }
+//     res.setHeader('Content-Type', 'text/html');
+//     res.writeHead(200);
+//     res.write('Proactive messages have been sent.');
+//     res.end();
+// });
+
 // Listen for incoming custom notifications and send proactive messages to users.
 server.post('/api/notify', (req, res, next) => {
 
     // Get "name", "description", and "videoUrl" from the request body.
+    const id = req.body.id;
     const name = req.body.name;
     const description = req.body.description;
+    const imageUrl = req.body.imageUrl; 
     const videoUrl = req.body.videoUrl;
 
     //create adaptive card with the data from the request body.
@@ -116,6 +133,14 @@ server.post('/api/notify', (req, res, next) => {
               "version": "1.0",
               "body": [
                 {
+                  "type": "Image",
+                  "url": imageUrl,
+                  "size": "stretch",
+                  "selectAction": {
+                    "type": "Action.OpenUrl",
+                    "url": videoUrl},
+                },
+                {
                   "type": "TextBlock",
                   "text": name,
                   "size": "large"
@@ -123,17 +148,18 @@ server.post('/api/notify', (req, res, next) => {
                 {
                   "type": "TextBlock",
                   "text": description
-                },
-                {
-                  "type": "TextBlock",
-                  "text": videoUrl
                 }
               ],
               "actions": [
                 {
                   "type": "Action.OpenUrl",
                   "url": videoUrl,
-                  "title": name
+                  "title": "Watch video explanation"
+                },
+                {
+                "type": "Action.OpenUrl",
+                "url": "http://localhost:4200/exercise/" + id,
+                "title": "View exercise details"
                 }
               ]
             }

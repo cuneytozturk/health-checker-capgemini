@@ -36,22 +36,22 @@ class ExerciseControllerTest {
     void getExercisesReturnsOk() throws Exception {
         //arrange
         when(exerciseService.findAll()).thenReturn(List.of(
-                new Exercise(1L,"Push Up", "A basic push up exercise.", "videoUrl"),
-                new Exercise(2L,"Squat", "A basic squat exercise.", "videoUrl")
+                new Exercise(1L,"Push Up", "A basic push up exercise.","imageUrl", "videoUrl"),
+                new Exercise(2L,"Squat", "A basic squat exercise.","imageUrl" ,"videoUrl")
         ));
 
         //act and assert
         mockMvc.perform(get("/api/exercises/getall"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"videoUrl\":\"videoUrl\"}," +
-                        "{\"id\":2,\"name\":\"Squat\",\"description\":\"A basic squat exercise.\",\"videoUrl\":\"videoUrl\"}]"));
+                .andExpect(content().json("[{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\"}," +
+                        "{\"id\":2,\"name\":\"Squat\",\"description\":\"A basic squat exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\"}]"));
     }
 
     @Test
     void addExerciseReturnsOk() throws Exception {
         //arrange
-        String exerciseJson = "{\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"videoUrl\":\"videoUrl\"}";
-        Exercise exercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "videoUrl");
+        String exerciseJson = "{\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\"}";
+        Exercise exercise = new Exercise(1L, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
         doNothing().when(exerciseService).save(exercise);
 
         //act and assert

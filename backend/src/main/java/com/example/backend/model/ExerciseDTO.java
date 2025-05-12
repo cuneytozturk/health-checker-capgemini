@@ -3,11 +3,13 @@ package com.example.backend.model;
 public class ExerciseDTO {
     private String name;
     private String description;
+    private String imageUrl;
     private String videoUrl;
 
-    public ExerciseDTO(String name, String description, String videoUrl) {
+    public ExerciseDTO(String name, String description, String imageUrl, String videoUrl) {
         this.name = name;
         this.description = description;
+        this.imageUrl = imageUrl;
         this.videoUrl = videoUrl;
     }
 
@@ -34,5 +36,13 @@ public class ExerciseDTO {
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

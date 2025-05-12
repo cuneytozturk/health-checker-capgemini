@@ -10,15 +10,18 @@ public class Exercise {
         private Long id;
 
         private String name;
+        @Column(length = 1000)
         private String description;
+        private String imageUrl;
         private String videoUrl;
 
     public Exercise() {}
 
-    public Exercise(Long id, String name, String description, String videoUrl) {
+    public Exercise(Long id, String name, String description, String imageUrl, String videoUrl) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.imageUrl = imageUrl;
         this.videoUrl = videoUrl;
     }
 
@@ -61,6 +64,14 @@ public class Exercise {
 
         public void setVideoUrl(String videoUrl) {
             this.videoUrl = videoUrl;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
         }
     }
 
