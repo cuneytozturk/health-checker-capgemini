@@ -42,8 +42,10 @@ jobs:
   build-frontend:
     name: Angular Build
     runs-on: ubuntu-latest
-    with:
-      node-version: 20
+    permissions:
+      contents: read
+      packages: write
+  
     steps:
       - name: Checkout the source code
         uses: actions/checkout@v4
