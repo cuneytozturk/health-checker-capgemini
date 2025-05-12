@@ -7,11 +7,15 @@ import { Observable } from 'rxjs';
 })
 export class ExerciseService {
 
-  private apiUrl = 'http://localhost:8080/api/exercises/getall';
+  private apiUrl = 'http://localhost:8080/api/exercises/';
 
   constructor(private http: HttpClient) { }
 
   getWorkoutItems(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+    return this.http.get<any>(`${this.apiUrl}getall`);
+  }
+
+  getExerciseById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}get/${id}`);
   }
 }

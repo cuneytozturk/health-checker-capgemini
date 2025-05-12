@@ -158,7 +158,7 @@ server.post('/api/notify', (req, res, next) => {
                 },
                 {
                 "type": "Action.OpenUrl",
-                "url": "http://localhost:4200/exercise/" + id,
+                "url": "http://localhost:4200/exercises/" + id,
                 "title": "View exercise details"
                 }
               ]

@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ExerciseService } from '../exercise.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-exercise',
-  imports: [],
+  standalone: true,
+  imports: [RouterModule],
   templateUrl: './exercise.component.html',
   styleUrl: './exercise.component.css'
 })

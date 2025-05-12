@@ -36,4 +36,9 @@ public class ExerciseController {
         exerciseService.sendNotification(id);
         return "Notification sent successfully!";
     }
+
+    @GetMapping("/get/{id}")
+    public Exercise getExerciseById(@PathVariable Long id) {
+        return exerciseRepository.findById(id).orElse(null);
+    }
 }

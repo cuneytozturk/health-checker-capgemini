@@ -1,17 +1,23 @@
-<h1>Health Checker</h1>
-    <h1>Workout Items</h1>
-    @for (item of exercises; track item.id) {
-        <div>
-        <ul>
-      <li >
-        <h2>{{ item.id }}</h2>
-        <h3>{{ item.name }}</h3>
-        <p>{{ item.description }}</p>
-      </li>
-    </ul>
-</div>}
-  @empty {
-    <div>
+<div class="min-h-screen bg-gray-50 p-6 font-sans text-gray-900">
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-4xl font-semibold mb-6 text-center">Health Checker</h1>
+    <h2 class="text-2xl font-medium mb-4 text-gray-700">Workout Items</h2>
+
+    @if (exercises) {
+      <div class="grid gap-4">
+        @for (item of exercises; track item.id) {
+          <div class="bg-white rounded-2xl shadow-sm p-6 transition hover:shadow-md">
+            <h3 class="text-xl font-semibold text-gray-800">
+              #{{ item.id }} — {{ item.name }}
+            </h3>
+            <p class="text-gray-600 mt-2">{{ item.description }}</p>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="mt-6 text-center text-gray-500">
         <p>No workout items found.</p>
       </div>
-  }
+    }
+  </div>
+</div>
