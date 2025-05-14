@@ -21,11 +21,11 @@ export class ExerciseDetailComponent implements OnInit {
   ngOnInit() {
     const exerciseId = this.route.snapshot.paramMap.get('id');
     if (exerciseId) {
-      this.getExerciseDetails(exerciseId);
+      this.getExerciseDetails(Number(exerciseId));
     }
   }
 
-  getExerciseDetails(id: string) {
+  getExerciseDetails(id: number) {
     this.exerciseService.getExerciseById(id).subscribe(data => {
       this.exercise = data;
     });

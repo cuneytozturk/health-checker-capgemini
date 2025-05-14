@@ -15,7 +15,7 @@ export class ExerciseService {
     return this.http.get<any>(`${this.apiUrl}getall`);
   }
 
-  getExerciseById(id: string): Observable<any> {
+  getExerciseById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}get/${id}`);
   }
 }
