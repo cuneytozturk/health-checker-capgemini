@@ -9,6 +9,7 @@ import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -19,8 +20,6 @@ public class QuartzSchedulerService {
 
     private final Scheduler scheduler;
     private ExerciseScheduleRepository exerciseScheduleRepository;
-
-
 
     public QuartzSchedulerService(Scheduler scheduler, ExerciseScheduleRepository exerciseScheduleRepository) {
         this.scheduler = scheduler;
@@ -36,6 +35,12 @@ public class QuartzSchedulerService {
         List<ExerciseSchedule> exerciseSchedules = exerciseScheduleRepository.findByUserId(userId);
 
         for (ExerciseSchedule exerciseSchedule : exerciseSchedules) {
+            LocalDateTime exerciseTime = exerciseSchedule.getTime();
+            int hour = exerciseTime.getHour();
+            int minute = exerciseTime.getMinute();
+
+            String cronexpression = String.format("0 %d %d * * ?", minute, hour);
+
             JobDetail jobDetail = JobBuilder.newJob(ExerciseJob.class)
                     .withIdentity("exerciseJob-" + exerciseSchedule.getExerciseId() + "-" + UUID.randomUUID())
                     .usingJobData("exerciseId", exerciseSchedule.getExerciseId())
@@ -45,26 +50,10 @@ public class QuartzSchedulerService {
 
             Trigger trigger = TriggerBuilder.newTrigger()
                     .withIdentity("trigger-" + exerciseSchedule.getExerciseId() + "-" + UUID.randomUUID())
-                    .startAt(Date.from(exerciseSchedule.getTime().atZone(ZoneId.systemDefault()).toInstant()))
+                    .withSchedule(CronScheduleBuilder.cronSchedule(cronexpression))
                     .build();
 
             scheduler.scheduleJob(jobDetail, trigger);
         }
-    }
-
-    public void scheduleExercise(ExerciseSchemeEntry entry) throws SchedulerException {
-
-
-        JobDetail jobDetail = JobBuilder.newJob(ExerciseJob.class)
-                .withIdentity("exerciseJob-" + entry.getExerciseId() + "-" + UUID.randomUUID())
-                .usingJobData("exerciseId", entry.getExerciseId())
-                .build();
-
-        Trigger trigger = TriggerBuilder.newTrigger()
-                .withIdentity("trigger-" + entry.getExerciseId() + "-" + UUID.randomUUID())
-                .startAt(Date.from(entry.getNotificationTime().atZone(ZoneId.systemDefault()).toInstant()))
-                .build();
-
-        scheduler.scheduleJob(jobDetail, trigger);
     }
 }
