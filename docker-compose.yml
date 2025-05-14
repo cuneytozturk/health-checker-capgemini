@@ -33,13 +33,6 @@ services:
     image: cuneytozturk/frontend
     ports:
       - "4200:4200"
-  bot-framework:
-    build:
-      context: ./bot-framework
-    ports:
-      - "3978:3978"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   postgres:
     image: postgres:14
