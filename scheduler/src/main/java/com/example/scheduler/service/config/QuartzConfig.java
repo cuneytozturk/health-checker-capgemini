@@ -1,6 +1,6 @@
-package com.example.scheduler.config;
+package com.example.scheduler.service.config;
 
-import com.example.scheduler.jobs.CheckNewScheduleJob;
+import com.example.scheduler.service.jobs.CheckNewScheduleJob;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +18,12 @@ public class QuartzConfig {
 
     @Bean
     public Trigger checkNewScheduleTrigger() {
+        final int intervalInSeconds = 60;
         return TriggerBuilder.newTrigger()
                 .forJob(checkNewScheduleJobDetail())
                 .withIdentity("checkNewScheduleTrigger")
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule()
-                        .withIntervalInSeconds(10) // Runs every 10 seconds
+                        .withIntervalInSeconds(intervalInSeconds)
                         .repeatForever())
                 .build();
     }
