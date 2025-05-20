@@ -33,10 +33,15 @@ public class ExerciseService {
         Optional<Exercise> exerciseOptional = exerciseRepository.findById(id);
         if (exerciseOptional.isPresent()) {
             Exercise exercise = exerciseOptional.get();
-            String url = "http://host.docker.internal:3978/api/notify";
+            String url = "http://localhost:3978/api/notify";
             restTemplate.postForObject(url, exercise, String.class);
         } else {
             throw new IllegalArgumentException("Exercise with id " + id + " not found");
         }
+    }
+
+    public Exercise findById(Long id) {
+        return exerciseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Exercise with id " + id + " not found"));
     }
 }

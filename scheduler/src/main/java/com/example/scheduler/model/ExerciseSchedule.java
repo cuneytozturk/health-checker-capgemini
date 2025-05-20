@@ -1,8 +1,12 @@
 package com.example.scheduler.model;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class ExerciseSchedule {
 
     @Id
@@ -14,6 +18,7 @@ public class ExerciseSchedule {
     private Long exerciseId;
 
     private LocalDateTime time;
+
 
     public ExerciseSchedule(Long id, Long userId, Long exerciseId, LocalDateTime time) {
         this.id = id;

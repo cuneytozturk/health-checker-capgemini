@@ -9,14 +9,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/exercises", produces = "application/json")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${api.frontend.url}")
 public class ExerciseController {
-
-    private final ExerciseRepository exerciseRepository;
     private final ExerciseService exerciseService;
 
-    public ExerciseController(ExerciseRepository exerciseRepository, ExerciseService exerciseService) {
-        this.exerciseRepository = exerciseRepository;
+    public ExerciseController(ExerciseService exerciseService) {
         this.exerciseService = exerciseService;
     }
 
@@ -39,6 +36,6 @@ public class ExerciseController {
 
     @GetMapping("/get/{id}")
     public Exercise getExerciseById(@PathVariable Long id) {
-        return exerciseRepository.findById(id).orElse(null);
+        return exerciseService.findById(id);
     }
 }

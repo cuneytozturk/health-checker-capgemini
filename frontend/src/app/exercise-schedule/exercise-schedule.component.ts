@@ -77,7 +77,7 @@ export class ExerciseScheduleComponent implements OnInit {
   const payload = {
     userId: this.newSchedule.userId,
     exerciseId: this.newSchedule.exerciseId,
-    time: localDateTime 
+    time: localDateTime
   };
 
     this.http.post(this.addUrl, payload).subscribe(() => {
