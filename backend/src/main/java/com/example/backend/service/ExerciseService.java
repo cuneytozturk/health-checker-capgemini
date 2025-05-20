@@ -39,4 +39,9 @@ public class ExerciseService {
             throw new IllegalArgumentException("Exercise with id " + id + " not found");
         }
     }
+
+    public Exercise findById(Long id) {
+        return exerciseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Exercise with id " + id + " not found"));
+    }
 }

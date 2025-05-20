@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/exerciseschedule", produces = "application/json")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${api.frontend.url}")
 public class ExerciseScheduleController {
 
 
