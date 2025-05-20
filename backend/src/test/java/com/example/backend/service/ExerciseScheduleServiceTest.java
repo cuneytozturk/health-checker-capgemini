@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.config.exception.InvalidScheduleException;
 import com.example.backend.model.ExerciseSchedule;
 import com.example.backend.repository.ExerciseScheduleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -103,5 +104,16 @@ class ExerciseScheduleServiceTest {
         assertEquals(103L, capturedSchedule.getUserId());
         assertEquals(203L, capturedSchedule.getExerciseId());
         assertEquals(LocalDateTime.of(2023, 12, 1, 7, 0), capturedSchedule.getTime());
+    }
+
+    //adding schedule with null values throws invalidscheduleexception
+    @Test
+    void addExerciseScheduleThrowsExceptionWhenNullValues() {
+        // Arrange
+        ExerciseSchedule newSchedule = new ExerciseSchedule(null, null, null, null);
+
+        // Act & Assert
+        assertThrows(InvalidScheduleException.class, () -> exerciseScheduleService.addExerciseSchedule(newSchedule));
+        verify(exerciseScheduleRepository, never()).save(any(ExerciseSchedule.class));
     }
 }
