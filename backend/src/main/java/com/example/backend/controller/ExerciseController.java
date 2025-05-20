@@ -2,7 +2,6 @@ package com.example.backend.controller;
 
 import com.example.backend.service.ExerciseService;
 import com.example.backend.model.Exercise;
-import com.example.backend.repository.ExerciseRepository;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.*;
 

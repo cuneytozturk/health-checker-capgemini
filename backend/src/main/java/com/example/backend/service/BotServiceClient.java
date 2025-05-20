@@ -3,7 +3,6 @@ package com.example.backend.service;
 import com.example.backend.model.Exercise;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

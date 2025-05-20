@@ -1,7 +1,6 @@
 package com.example.backend.model;
 
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
 public class Exercise {
