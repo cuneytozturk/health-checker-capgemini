@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.model.Exercise;
 import com.example.backend.model.ExerciseDTO;
 import com.example.backend.repository.ExerciseRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,12 +14,15 @@ import java.util.Optional;
 public class ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
-    private final RestTemplate restTemplate;
+    private final BotServiceClient botServiceClient;
+
+    @Value("${api.botservice.url}")
+    private String botServiceUrl;
 
 
-    public ExerciseService(ExerciseRepository exerciseRepository) {
+    public ExerciseService(ExerciseRepository exerciseRepository, BotServiceClient botServiceClient) {
         this.exerciseRepository = exerciseRepository;
-        this.restTemplate = new RestTemplate();
+        this.botServiceClient = botServiceClient;
     }
 
     public List<Exercise> findAll() {
@@ -29,12 +33,11 @@ public class ExerciseService {
         exerciseRepository.save(exercise);
     }
 
+    // sends notification to the bot service url
     public void sendNotification(Long id) {
         Optional<Exercise> exerciseOptional = exerciseRepository.findById(id);
         if (exerciseOptional.isPresent()) {
-            Exercise exercise = exerciseOptional.get();
-            String url = "http://localhost:3978/api/notify";
-            restTemplate.postForObject(url, exercise, String.class);
+            botServiceClient.sendNotification(botServiceUrl, exerciseOptional.get());
         } else {
             throw new IllegalArgumentException("Exercise with id " + id + " not found");
         }
