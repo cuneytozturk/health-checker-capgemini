@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.model.ExerciseSchedule;
+import com.example.backend.model.Preferences;
 import com.example.backend.service.ExerciseScheduleService;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +43,12 @@ public class ExerciseScheduleController {
         logger.info("Adding exercise schedule: {}", exerciseSchedule);
         exerciseScheduleService.addExerciseSchedule(exerciseSchedule);
         return "Exercise schedule added successfully!";
+    }
+
+    @GetMapping("/createSchedules")
+    public String createDailyExerciseSchedules() {
+        logger.info("Creating daily exercise schedules");
+        exerciseScheduleService.createDailyExerciseSchedules(new Preferences(1L,1L,1L,100,4));
+        return "Daily exercise schedules created successfully!";
     }
 }
