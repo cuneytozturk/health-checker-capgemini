@@ -1,7 +1,7 @@
 package com.example.backend.service;
 
+import com.example.backend.config.exception.EntityNotFoundException;
 import com.example.backend.model.Exercise;
-import com.example.backend.model.ExerciseDTO;
 import com.example.backend.repository.ExerciseRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,10 +9,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +25,9 @@ class ExerciseServiceTest {
 
     @Mock
     private ExerciseRepository exerciseRepository;
+
+    @Mock
+    private BotServiceClient botServiceClient;
 
     @Test
     void findAllReturnsAllExercises() {
@@ -62,24 +61,53 @@ class ExerciseServiceTest {
         assertEquals("Push Up", captor.getValue().getName());
     }
 
-//    @Test
-//    void sendNotificationSendsPostRequest() {
-//        Exercise exercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "videoUrl");
-//        when(exerciseRepository.findById(1L)).thenReturn(Optional.of(exercise));
-//
-//        exerciseService.sendNotification(1L);
-//
-//        ExerciseDTO expectedDTO = new ExerciseDTO("Push Up", "A basic push up exercise.", "videoUrl");
-//        verify(restTemplate, times(1)).postForObject(eq("http://host.docker.internal:3978/api/notify"), eq(expectedDTO), eq(String.class));
-//    }
-//
-//    @Test
-//    void sendNotificationThrowsExceptionWhenExerciseNotFound() {
-//        when(exerciseRepository.findById(1L)).thenReturn(Optional.empty());
-//
-//        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> exerciseService.sendNotification(1L));
-//
-//        assertEquals("Exercise with id 1 not found", exception.getMessage());
-//        verify(restTemplate, never()).postForObject(anyString(), any(), any());
-//    }
+    @Test
+    void findByIdReturnsExerciseWhenExists() {
+        // Arrange
+        Exercise mockExercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl");
+        when(exerciseRepository.findById(1L)).thenReturn(Optional.of(mockExercise));
+
+        // Act
+        Exercise result = exerciseService.findById(1L);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("Push Up", result.getName());
+        verify(exerciseRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void findByIdThrowsExceptionWhenNotFound() {
+        // Arrange
+        when(exerciseRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> exerciseService.findById(1L));
+        assertEquals("Exercise with id 1 not found", exception.getMessage());
+        verify(exerciseRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void sendNotificationCallsBotServiceClient() {
+        // Arrange
+        Exercise mockExercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl");
+        when(exerciseRepository.findById(1L)).thenReturn(Optional.of(mockExercise));
+
+        // Act
+        exerciseService.sendNotification(1L);
+
+        // Assert
+        verify(botServiceClient, times(1)).sendNotification(mockExercise);
+    }
+
+    @Test
+    void sendNotificationThrowsExceptionWhenExerciseNotFound() {
+        // Arrange
+        when(exerciseRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> exerciseService.sendNotification(1L));
+        assertEquals("Exercise with id 1 not found", exception.getMessage());
+        verify(botServiceClient, never()).sendNotification(any());
+    }
 }

@@ -2,13 +2,8 @@ package com.example.backend.controller;
 import com.example.backend.model.Exercise;
 import com.example.backend.service.ExerciseService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -32,6 +27,7 @@ class ExerciseControllerTest {
 
     @MockitoBean
     private ExerciseService exerciseService;
+
 
     @Test
     void getExercisesReturnsOk() throws Exception {
@@ -61,5 +57,30 @@ class ExerciseControllerTest {
                 .content(exerciseJson))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Exercise added successfully!"));
+    }
+
+    @Test
+    void sendNotificationReturnsOk() throws Exception {
+        //arrange
+        Long exerciseId = 1L;
+        doNothing().when(exerciseService).sendNotification(exerciseId);
+
+        //act and assert
+        mockMvc.perform(get("/api/exercises/sendnotification/{id}", exerciseId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Notification sent successfully!"));
+    }
+
+    @Test
+    void getExerciseByIdReturnsOk() throws Exception {
+        //arrange
+        Long exerciseId = 1L;
+        Exercise exercise = new Exercise(exerciseId, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
+        when(exerciseService.findById(exerciseId)).thenReturn(exercise);
+
+        //act and assert
+        mockMvc.perform(get("/api/exercises/get/{id}", exerciseId))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\"}"));
     }
 }

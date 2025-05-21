@@ -1,10 +1,11 @@
 package com.example.backend.service;
 
+import com.example.backend.config.exception.EntityNotFoundException;
+import com.example.backend.config.exception.InvalidExerciseException;
 import com.example.backend.model.Exercise;
-import com.example.backend.model.ExerciseDTO;
 import com.example.backend.repository.ExerciseRepository;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,35 +14,44 @@ import java.util.Optional;
 public class ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
-    private final RestTemplate restTemplate;
+    private final BotServiceClient botServiceClient;
+    private final Logger logger = org.slf4j.LoggerFactory.getLogger(ExerciseService.class);
 
 
-    public ExerciseService(ExerciseRepository exerciseRepository) {
+    public ExerciseService(ExerciseRepository exerciseRepository, BotServiceClient botServiceClient) {
         this.exerciseRepository = exerciseRepository;
-        this.restTemplate = new RestTemplate();
+        this.botServiceClient = botServiceClient;
     }
 
     public List<Exercise> findAll() {
+        logger.info("Fetching all exercises");
         return exerciseRepository.findAll();
     }
 
     public void save(Exercise exercise) {
+        logger.info("Saving exercise: {}", exercise);
+        if (exercise == null || exercise.getName() == null || exercise.getDescription() == null || exercise.getImageUrl() == null || exercise.getVideoUrl() == null) {
+            throw new InvalidExerciseException("Exercise and its properties must not be null");
+        }
         exerciseRepository.save(exercise);
+        logger.info("Exercise saved successfully: {}", exercise);
     }
 
+    // sends notification to the bot service url
     public void sendNotification(Long id) {
+        logger.info("Sending notification for exercise with id: {}", id);
         Optional<Exercise> exerciseOptional = exerciseRepository.findById(id);
         if (exerciseOptional.isPresent()) {
-            Exercise exercise = exerciseOptional.get();
-            String url = "http://localhost:3978/api/notify";
-            restTemplate.postForObject(url, exercise, String.class);
+            botServiceClient.sendNotification(exerciseOptional.get());
+            logger.info("Notification sent successfully for exercise with id: {}", id);
         } else {
-            throw new IllegalArgumentException("Exercise with id " + id + " not found");
+            throw new EntityNotFoundException("Exercise with id " + id + " not found");
         }
     }
 
     public Exercise findById(Long id) {
+        logger.info("Fetching exercise with id: {}", id);
         return exerciseRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Exercise with id " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Exercise with id " + id + " not found"));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.backend;
+package com.example.backend.config;
 
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -7,6 +7,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.IOException;
 
 public class LoggingInterceptor implements ClientHttpRequestInterceptor {
+    // This class is used to log HTTP requests in console
  @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         System.out.println("URI: " + request.getURI());
