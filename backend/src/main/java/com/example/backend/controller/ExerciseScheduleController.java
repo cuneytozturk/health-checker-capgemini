@@ -44,11 +44,4 @@ public class ExerciseScheduleController {
         exerciseScheduleService.addExerciseSchedule(exerciseSchedule);
         return "Exercise schedule added successfully!";
     }
-
-    @GetMapping("/createSchedules")
-    public String createDailyExerciseSchedules() {
-        logger.info("Creating daily exercise schedules");
-        exerciseScheduleService.createDailyExerciseSchedules(new Preferences(1L,1L,1L,100,4));
-        return "Daily exercise schedules created successfully!";
-    }
 }
