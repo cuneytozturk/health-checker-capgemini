@@ -35,8 +35,8 @@ class ExerciseControllerTest {
 
     @BeforeEach
     void setUp() {
-        exercise1 = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl", "Strength", 10);
-        exercise2 = new Exercise(2L, "Squat", "A basic squat exercise.", "imageUrl", "videoUrl", "Strength", 15);
+        exercise1 = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl", 1L, 10);
+        exercise2 = new Exercise(2L, "Squat", "A basic squat exercise.", "imageUrl", "videoUrl", 2L, 15);
     }
 
     @Test
@@ -47,14 +47,14 @@ class ExerciseControllerTest {
         // Act and Assert
         mockMvc.perform(get("/api/exercises/getall"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"category\":\"Strength\",\"timeRequired\":10}," +
-                        "{\"id\":2,\"name\":\"Squat\",\"description\":\"A basic squat exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"category\":\"Strength\",\"timeRequired\":15}]"));
+                .andExpect(content().json("[{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"categoryId\":1,\"timeRequired\":10}," +
+                        "{\"id\":2,\"name\":\"Squat\",\"description\":\"A basic squat exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"categoryId\":2,\"timeRequired\":15}]"));
     }
 
     @Test
     void addExerciseReturnsOk() throws Exception {
         // Arrange
-        String exerciseJson = "{\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"category\":\"Strength\",\"timeRequired\":10}";
+        String exerciseJson = "{\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"category\":1,\"timeRequired\":10}";
         doNothing().when(exerciseService).save(any(Exercise.class));
 
         // Act and Assert
@@ -86,6 +86,6 @@ class ExerciseControllerTest {
         // Act and Assert
         mockMvc.perform(get("/api/exercises/get/{id}", exerciseId))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"category\":\"Strength\",\"timeRequired\":10}"));
+                .andExpect(content().json("{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"categoryId\":1,\"timeRequired\":10}"));
     }
 }

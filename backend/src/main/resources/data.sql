@@ -34,12 +34,3 @@ INSERT INTO preferences (id, user_id, goal_category_id, time_per_day, frequency)
                                                                                      (3, 103, 3, 20, 5),
                                                                                      (4, 104, 4, 25, 2),
                                                                                      (5, 105, 5, 30, 1);
-
--- Dummy data for exercise_schedule table
-DELETE FROM exercise_schedule;
-INSERT INTO exercise_schedule (id, user_id, exercise_id, time) VALUES
-                                                                   (1, 101, 1, '2023-11-01 08:00:00'),
-                                                                   (2, 102, 2, '2023-11-01 09:00:00'),
-                                                                   (3, 103, 3, '2023-11-01 10:00:00'),
-                                                                   (4, 104, 4, '2023-11-01 11:00:00'),
-                                                                   (5, 105, 5, '2023-11-01 12:00:00');

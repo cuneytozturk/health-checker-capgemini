@@ -3,18 +3,28 @@
     <h2 class="text-2xl font-semibold mb-6">User Exercise Schedule</h2>
 
 
-      <!-- Add New Entry Form -->
     <form (ngSubmit)="addSchedule()" #scheduleForm="ngForm" class="add-form">
-        <label>
-        Exercise ID:
-        <input type="number" [(ngModel)]="newSchedule.exerciseId" name="exerciseId" required>
-        </label>
-        <label>
-        Planned Time:
-        <input type="time" [(ngModel)]="newSchedule.time" name="time" required>
-        </label>
-        <button type="submit" [disabled]="!scheduleForm.form.valid">Add</button>
-    </form>
+      <mat-form-field appearance="fill">
+        <mat-label>Exercise ID</mat-label>
+        <input matInput type="number" [(ngModel)]="newSchedule.exerciseId" name="exerciseId" required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Planned Time</mat-label>
+        <input
+          matInput
+          [matTimepicker]="picker"
+          [(ngModel)]="newSchedule.time"
+          name="time"
+          required
+          readonly
+        >
+        <mat-timepicker #picker></mat-timepicker>
+        <button mat-icon-button matSuffix (click)="picker.open()" type="button">
+          <mat-icon>access_time</mat-icon>
+    </button>
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="submit" [disabled]="!scheduleForm.form.valid">Add</button>
+</form>
 
     @if (schedules.length > 0) {
       <div class="overflow-x-auto">
@@ -31,7 +41,7 @@
                 <a [routerLink]="['/exercises', schedule.exerciseId]">
                 <td class="px-6 py-4 text-sm text-gray-900">{{ getExerciseName(schedule.exerciseId) }}</td>
                 </a>
-                <td class="px-6 py-4 text-sm text-gray-600">{{ schedule.time | date:'shortTime' }}</td>
+                <td class="px-6 py-4 text-sm text-gray-600">{{ schedule.time}}</td>
               </tr>
             }
           </tbody>

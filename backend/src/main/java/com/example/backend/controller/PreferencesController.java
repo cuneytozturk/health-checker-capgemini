@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/preferences")
+@CrossOrigin(origins = "${api.frontend.url}")
 public class PreferencesController {
 
     private final PreferencesService preferencesService;
@@ -17,15 +18,15 @@ public class PreferencesController {
         this.preferencesService = preferencesService;
     }
 
-    @PostMapping
-    public ResponseEntity<Preferences> addPreference(@RequestBody Preferences preferences) {
-        Preferences savedPreference = preferencesService.addPreference(preferences);
-        return ResponseEntity.ok(savedPreference);
+    @GetMapping("/{userId}")
+    public ResponseEntity<Preferences> getPreferencesByUserId(@PathVariable Long userId) {
+        Preferences preferences = preferencesService.getPreferencesByUserId(userId);
+        return ResponseEntity.ok(preferences);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Preferences>> getAllPreferences() {
-        List<Preferences> preferences = preferencesService.getAllPreferences();
-        return ResponseEntity.ok(preferences);
+    @PutMapping
+    public ResponseEntity<Preferences> updatePreference(@RequestBody Preferences preferences) {
+        Preferences updatedPreference = preferencesService.updatePreference(preferences);
+        return ResponseEntity.ok(updatedPreference);
     }
 }

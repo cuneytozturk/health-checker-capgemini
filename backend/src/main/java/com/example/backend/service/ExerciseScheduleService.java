@@ -46,6 +46,17 @@ public class ExerciseScheduleService {
         return exerciseScheduleRepository.findAll(Example.of(example));
     }
 
+    public void deleteSchedulesByUserId(Long userId) {
+        logger.info("Deleting exercise schedules for user with id: {}", userId);
+        List<ExerciseSchedule> schedules = getExerciseSchedulesByUserId(userId);
+        if (!schedules.isEmpty()) {
+            exerciseScheduleRepository.deleteAll(schedules);
+            logger.info("Deleted {} exercise schedules for user with id: {}", schedules.size(), userId);
+        } else {
+            logger.warn("No exercise schedules found for user with id: {}", userId);
+        }
+    }
+
     public void addExerciseSchedule(ExerciseSchedule exerciseSchedule) {
         logger.info("Adding exercise schedule: {}", exerciseSchedule);
         if(exerciseSchedule.getExerciseId() == null || exerciseSchedule.getUserId() == null || exerciseSchedule.getTime() == null) {
@@ -58,17 +69,16 @@ public class ExerciseScheduleService {
     public void createDailyExerciseSchedules(Preferences preferences) {
         logger.info("Creating daily exercise schedules for user: {}", preferences.getUserId());
 
-        // Fetch exercises matching the goal category
         List<Exercise> exercises = exerciseRepository.findByCategoryId(preferences.getGoalCategoryId());
         if (exercises.isEmpty()) {
             logger.warn("No exercises found for category ID: {}", preferences.getGoalCategoryId());
             return;
         }
 
-        int sessionTime = preferences.getTimePerDay() / preferences.getFrequency(); // Time per session
+        int sessionTime = preferences.getTimePerDay() / preferences.getFrequency();
         int frequency = preferences.getFrequency();
-        LocalTime startTime = LocalTime.of(8, 0); // Start scheduling at 08:00 AM
-        LocalTime endTime = LocalTime.of(20, 0); // End scheduling at 08:00 PM
+        LocalTime startTime = LocalTime.of(8, 0);
+        LocalTime endTime = LocalTime.of(20, 0);
         int intervalMinutes = (int) java.time.Duration.between(startTime, endTime).toMinutes() / frequency;
 
         List<ExerciseSchedule> schedules = new ArrayList<>();
@@ -83,31 +93,24 @@ public class ExerciseScheduleService {
                 Exercise exercise = exercises.get(exerciseIndex);
 
                 if (exercise.getTimeRequired() <= remainingSessionTime) {
-                    // Create a new schedule entry
                     ExerciseSchedule schedule = new ExerciseSchedule();
                     schedule.setUserId(preferences.getUserId());
                     schedule.setExerciseId(exercise.getId());
-                    schedule.setTime(LocalDateTime.of(LocalDate.now(), sessionStartTime));
+                    schedule.setTime(sessionStartTime); // Use LocalTime
 
                     schedules.add(schedule);
                     remainingSessionTime -= exercise.getTimeRequired();
-
-
-                    // Increment the sessionStartTime for the next exercise
                     sessionStartTime = sessionStartTime.plusMinutes(exercise.getTimeRequired());
 
                     logger.info("Scheduled exercise: {} for user: {} at time: {}", exercise.getName(), preferences.getUserId(), schedule.getTime());
                 } else {
-                    // If the exercise cannot fully fit, repeat it
-                    remainingSessionTime = 0; // End the session after assigning one exercise
+                    remainingSessionTime = 0;
                 }
 
-                // Move to the next exercise (loop back to the start if at the end)
                 exerciseIndex = (exerciseIndex + 1) % exercises.size();
             }
         }
 
-        // Save schedules to the database
         exerciseScheduleRepository.saveAll(schedules);
         logger.info("Daily exercise schedules created successfully for user: {}", preferences.getUserId());
     }

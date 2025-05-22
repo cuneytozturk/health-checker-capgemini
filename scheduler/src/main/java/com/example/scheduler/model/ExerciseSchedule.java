@@ -1,9 +1,10 @@
 package com.example.scheduler.model;
+
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -17,10 +18,9 @@ public class ExerciseSchedule {
 
     private Long exerciseId;
 
-    private LocalDateTime time;
+    private LocalTime time;
 
-
-    public ExerciseSchedule(Long id, Long userId, Long exerciseId, LocalDateTime time) {
+    public ExerciseSchedule(Long id, Long userId, Long exerciseId, LocalTime time) {
         this.id = id;
         this.userId = userId;
         this.exerciseId = exerciseId;
@@ -54,11 +54,11 @@ public class ExerciseSchedule {
         this.exerciseId = exerciseId;
     }
 
-    public LocalDateTime getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 }

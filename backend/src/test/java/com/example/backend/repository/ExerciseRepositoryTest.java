@@ -1,6 +1,7 @@
 package com.example.backend.repository;
 
 import com.example.backend.model.Exercise;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,27 +17,34 @@ class ExerciseRepositoryTest {
     @Autowired
     private ExerciseRepository exerciseRepository;
 
+    private Exercise exercise1;
+    private Exercise exercise2;
+
+    @BeforeEach
+    void setUp() {
+        exercise1 = new Exercise(null, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl", 1L, 10);
+        exercise2 = new Exercise(null, "Squat", "A basic squat exercise.", "imageUrl", "videoUrl", 1L, 15);
+        exerciseRepository.save(exercise1);
+        exerciseRepository.save(exercise2);
+    }
+
     @Test
     void saveExercisePersistsData() {
         // Arrange
-        Exercise exercise = new Exercise(null, "Push Up", "A basic push up exercise.","imageUrl" ,"videoUrl");
+        Exercise newExercise = new Exercise(null, "Plank", "A core strength exercise.", "imageUrl", "videoUrl", 2L, 5);
 
         // Act
-        Exercise savedExercise = exerciseRepository.save(exercise);
+        Exercise savedExercise = exerciseRepository.save(newExercise);
 
         // Assert
         assertNotNull(savedExercise.getId());
-        assertEquals("Push Up", savedExercise.getName());
+        assertEquals("Plank", savedExercise.getName());
     }
 
     @Test
     void findByIdReturnsExercise() {
-        // Arrange
-        Exercise exercise = new Exercise(null, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
-        Exercise savedExercise = exerciseRepository.save(exercise);
-
         // Act
-        Optional<Exercise> foundExercise = exerciseRepository.findById(savedExercise.getId());
+        Optional<Exercise> foundExercise = exerciseRepository.findById(exercise1.getId());
 
         // Assert
         assertTrue(foundExercise.isPresent());
@@ -45,12 +53,6 @@ class ExerciseRepositoryTest {
 
     @Test
     void findAllReturnsAllExercises() {
-        // Arrange
-        Exercise exercise1 = new Exercise(null, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
-        Exercise exercise2 = new Exercise(null, "Squat", "A basic squat exercise.","imageUrl", "videoUrl");
-        exerciseRepository.save(exercise1);
-        exerciseRepository.save(exercise2);
-
         // Act
         List<Exercise> exercises = exerciseRepository.findAll();
 
@@ -60,13 +62,9 @@ class ExerciseRepositoryTest {
 
     @Test
     void deleteByIdRemovesExercise() {
-        // Arrange
-        Exercise exercise = new Exercise(null, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
-        Exercise savedExercise = exerciseRepository.save(exercise);
-
         // Act
-        exerciseRepository.deleteById(savedExercise.getId());
-        Optional<Exercise> deletedExercise = exerciseRepository.findById(savedExercise.getId());
+        exerciseRepository.deleteById(exercise1.getId());
+        Optional<Exercise> deletedExercise = exerciseRepository.findById(exercise1.getId());
 
         // Assert
         assertFalse(deletedExercise.isPresent());

@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +39,8 @@ class ExerciseScheduleControllerTest {
     @BeforeEach
     void setUp() {
         exerciseSchedules = List.of(
-                new ExerciseSchedule(1L, 101L, 201L, LocalDateTime.of(2023, 10, 1, 8, 0)),
-                new ExerciseSchedule(2L, 102L, 202L, LocalDateTime.of(2023, 11, 1, 18, 0))
+                new ExerciseSchedule(1L, 101L, 201L, LocalTime.of(8, 0)),
+                new ExerciseSchedule(2L, 102L, 202L, LocalTime.of(18, 0))
         );
     }
 
@@ -52,8 +52,8 @@ class ExerciseScheduleControllerTest {
         // Act and Assert
         mockMvc.perform(get("/api/exerciseschedule/getall"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"id\":1,\"userId\":101,\"exerciseId\":201,\"time\":\"2023-10-01T08:00:00\"}," +
-                        "{\"id\":2,\"userId\":102,\"exerciseId\":202,\"time\":\"2023-11-01T18:00:00\"}]"));
+                .andExpect(content().json("[{\"id\":1,\"userId\":101,\"exerciseId\":201,\"time\":\"08:00:00\"}," +
+                        "{\"id\":2,\"userId\":102,\"exerciseId\":202,\"time\":\"18:00:00\"}]"));
     }
 
     @Test
@@ -64,7 +64,7 @@ class ExerciseScheduleControllerTest {
         // Act and Assert
         mockMvc.perform(get("/api/exerciseschedule/get/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":1,\"userId\":101,\"exerciseId\":201,\"time\":\"2023-10-01T08:00:00\"}"));
+                .andExpect(content().json("{\"id\":1,\"userId\":101,\"exerciseId\":201,\"time\":\"08:00:00\"}"));
     }
 
     @Test
@@ -75,13 +75,13 @@ class ExerciseScheduleControllerTest {
         // Act and Assert
         mockMvc.perform(get("/api/exerciseschedule/getbyuserid/101"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"id\":1,\"userId\":101,\"exerciseId\":201,\"time\":\"2023-10-01T08:00:00\"}]"));
+                .andExpect(content().json("[{\"id\":1,\"userId\":101,\"exerciseId\":201,\"time\":\"08:00:00\"}]"));
     }
 
     @Test
     void addExerciseScheduleReturnsOk() throws Exception {
         // Arrange
-        String scheduleJson = "{\"userId\":101,\"exerciseId\":201,\"time\":\"2023-10-01T08:00:00\"}";
+        String scheduleJson = "{\"userId\":101,\"exerciseId\":201,\"time\":\"08:00:00\"}";
         doNothing().when(exerciseScheduleService).addExerciseSchedule(any(ExerciseSchedule.class));
 
         // Act and Assert
@@ -97,6 +97,6 @@ class ExerciseScheduleControllerTest {
         ExerciseSchedule capturedSchedule = captor.getValue();
         assertEquals(101L, capturedSchedule.getUserId());
         assertEquals(201L, capturedSchedule.getExerciseId());
-        assertEquals(LocalDateTime.of(2023, 10, 1, 8, 0), capturedSchedule.getTime());
+        assertEquals(LocalTime.of(8, 0), capturedSchedule.getTime());
     }
 }

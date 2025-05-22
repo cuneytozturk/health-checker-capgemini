@@ -5,7 +5,9 @@ import com.example.scheduler.repository.ExerciseScheduleRepository;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.time.LocalDateTime;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +24,7 @@ public class CheckNewScheduleJob implements Job {
     }
 
     @Override
-    public void execute(JobExecutionContext context){
+    public void execute(JobExecutionContext context) {
         logger.info("Executing CheckNewScheduleJob...");
         List<ExerciseSchedule> entries = exerciseScheduleRepository.findAll();
 
@@ -31,10 +33,10 @@ public class CheckNewScheduleJob implements Job {
 
             try {
                 if (!scheduler.checkExists(jobKey)) {
-                    LocalDateTime exerciseTime = entry.getTime();
+                    LocalTime exerciseTime = entry.getTime();
                     int hour = exerciseTime.getHour();
                     int minute = exerciseTime.getMinute();
-                    String cronexpression = String.format("0 %d %d * * ?", minute, hour);
+                    String cronExpression = String.format("0 %d %d * * ?", minute, hour);
 
                     JobDetail jobDetail = JobBuilder.newJob(ExerciseJob.class)
                             .withIdentity(jobKey)
@@ -44,7 +46,7 @@ public class CheckNewScheduleJob implements Job {
 
                     Trigger trigger = TriggerBuilder.newTrigger()
                             .withIdentity(TRIGGER_PREFIX + entry.getExerciseId() + "-" + UUID.randomUUID())
-                            .withSchedule(CronScheduleBuilder.cronSchedule(cronexpression))
+                            .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                             .build();
 
                     scheduler.scheduleJob(jobDetail, trigger);

@@ -4,6 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ExerciseService } from '../exercise.service';
 import { FormsModule } from '@angular/forms';
+import { MatTimepickerModule } from '@angular/material/timepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+
 
 
 interface ExerciseSchedule {
@@ -21,21 +26,29 @@ interface Exercise {
 @Component({
   selector: 'app-exercise-schedule',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [
+    CommonModule, 
+    RouterModule, 
+    FormsModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatTimepickerModule,
+    MatIconModule],
   templateUrl: './exercise-schedule.component.html',
   styleUrls: ['./exercise-schedule.component.css']
 })
 export class ExerciseScheduleComponent implements OnInit {
   schedules: ExerciseSchedule[] = [];
   exerciseNames: { [id: number]: string } = {};
+  userId = 101;
 
   newSchedule = {
-      userId: 1,
+      userId: this.userId,
       exerciseId: null as number | null,
       time: ''
     };
 
-  private apiUrl = 'http://localhost:8080/api/exerciseschedule/getbyuserid/1';
+  private apiUrl = 'http://localhost:8080/api/exerciseschedule/getbyuserid/' + this.userId;
   private addUrl = 'http://localhost:8080/api/exerciseschedule/add';
 
 
@@ -56,36 +69,29 @@ export class ExerciseScheduleComponent implements OnInit {
     });
   }
 
-  addSchedule() {
-    if (!this.newSchedule.exerciseId || !this.newSchedule.time) return;
-    
-  const today = new Date();
-  const [hours, minutes] = this.newSchedule.time.split(':');
-  today.setHours(Number(hours), Number(minutes), 0, 0);
+addSchedule() {
+  if (!this.newSchedule.exerciseId || !this.newSchedule.time) return;
 
-  // There's a better way to format the date, but this is a "simple" solution for now
-  // maybe refactor time format in database
-  const pad = (n: number) => n.toString().padStart(2, '0');
-  const localDateTime =
-    today.getFullYear() + '-' +
-    pad(today.getMonth() + 1) + '-' +
-    pad(today.getDate()) + 'T' +
-    pad(today.getHours()) + ':' +
-    pad(today.getMinutes()) + ':' +
-    pad(today.getSeconds());
+  let timeValue: any = this.newSchedule.time;
+  if (timeValue instanceof Date) {
+    const hours = timeValue.getHours().toString().padStart(2, '0');
+    const minutes = timeValue.getMinutes().toString().padStart(2, '0');
+    timeValue = `${hours}:${minutes}`;
+  }
 
   const payload = {
     userId: this.newSchedule.userId,
     exerciseId: this.newSchedule.exerciseId,
-    time: localDateTime
+    time: timeValue
   };
 
-    this.http.post(this.addUrl, payload).subscribe(() => {
-      this.newSchedule.exerciseId = null;
-      this.newSchedule.time = '';
-      this.loadSchedules();
-    });
-  }
+  // todo backend should return JSON instead of text
+  this.http.post(this.addUrl, payload, { responseType: 'text' }).subscribe(() => {
+    this.newSchedule.exerciseId = null;
+    this.newSchedule.time = '';
+    this.loadSchedules();
+  });
+}
 
   getExerciseName(id: number): string {
     return this.exerciseNames[id] || 'Loading...';

@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS exercise_schedule (
                                                  id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                                  user_id BIGINT NOT NULL,
                                                  exercise_id BIGINT NOT NULL,
-                                                 time DATETIME NOT NULL,
+                                                 time TIME NOT NULL,
                                                  CONSTRAINT fk_exercise
                                                      FOREIGN KEY (exercise_id)
                                                          REFERENCES exercise (id)
