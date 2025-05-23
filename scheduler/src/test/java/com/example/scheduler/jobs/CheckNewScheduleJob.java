@@ -6,27 +6,31 @@ import com.example.scheduler.service.jobs.CheckNewScheduleJob;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.quartz.*;
-        import org.slf4j.Logger;
+import org.slf4j.Logger;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 import static org.mockito.Mockito.*;
-        import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 class CheckNewScheduleJobTest {
 
     private final ExerciseScheduleRepository exerciseScheduleRepository = mock(ExerciseScheduleRepository.class);
     private final Scheduler scheduler = mock(Scheduler.class);
     private final Logger logger = mock(Logger.class);
-    private final CheckNewScheduleJob checkNewScheduleJob = new CheckNewScheduleJob(exerciseScheduleRepository, scheduler);
+    private final CheckNewScheduleJob checkNewScheduleJob;
+
+    public CheckNewScheduleJobTest() {
+        checkNewScheduleJob = new CheckNewScheduleJob(exerciseScheduleRepository, scheduler);
+        checkNewScheduleJob.setLogger(logger); // Inject mocked logger
+    }
 
     @Test
     void execute_SchedulesNewJob() throws SchedulerException {
         // Arrange
-        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalDateTime.of(2023, 10, 1, 10, 0));
+        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalTime.of(10, 0));
         when(exerciseScheduleRepository.findAll()).thenReturn(List.of(schedule));
         when(scheduler.checkExists(any(JobKey.class))).thenReturn(false);
 
@@ -49,7 +53,7 @@ class CheckNewScheduleJobTest {
     @Test
     void execute_DoesNotScheduleExistingJob() throws SchedulerException {
         // Arrange
-        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalDateTime.of(2023, 10, 1, 10, 0));
+        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalTime.of(10, 0));
         when(exerciseScheduleRepository.findAll()).thenReturn(List.of(schedule));
         when(scheduler.checkExists(any(JobKey.class))).thenReturn(true);
 
@@ -63,7 +67,7 @@ class CheckNewScheduleJobTest {
     @Test
     void execute_HandlesSchedulerException() throws SchedulerException {
         // Arrange
-        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalDateTime.of(2023, 10, 1, 10, 0));
+        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalTime.of(10, 0));
         when(exerciseScheduleRepository.findAll()).thenReturn(List.of(schedule));
         when(scheduler.checkExists(any(JobKey.class))).thenThrow(new SchedulerException("Test exception"));
 
@@ -71,6 +75,6 @@ class CheckNewScheduleJobTest {
         checkNewScheduleJob.execute(null);
 
         // Assert
-        verify(logger, never()).info("Scheduled job for exercise ID: 1 at 2023-10-01T10:00");
+        verify(logger, times(1)).error(contains("Error scheduling job for exercise ID: 1"), any(SchedulerException.class));
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.Mockito.*;
 
+
 class ExerciseJobTest {
 
     private final RestTemplate restTemplate = mock(RestTemplate.class);

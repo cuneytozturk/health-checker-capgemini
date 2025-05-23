@@ -14,7 +14,7 @@ import java.util.UUID;
 public class CheckNewScheduleJob implements Job {
     private final ExerciseScheduleRepository exerciseScheduleRepository;
     private final Scheduler scheduler;
-    private static final Logger logger = LoggerFactory.getLogger(CheckNewScheduleJob.class);
+    private static Logger logger = LoggerFactory.getLogger(CheckNewScheduleJob.class);
     private static final String JOB_PREFIX = "job_";
     private static final String TRIGGER_PREFIX = "trigger_";
 
@@ -56,5 +56,9 @@ public class CheckNewScheduleJob implements Job {
                 logger.error("Error scheduling job for exercise ID: " + entry.getExerciseId(), e);
             }
         }
+    }
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
     }
 }
