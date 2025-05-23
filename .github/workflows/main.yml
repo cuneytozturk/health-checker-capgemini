@@ -34,10 +34,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/build-push-action@v6.16.0
         with:
-          context: ./backend
-          file: ./backend/Dockerfile
+          context: ./scheduler
+          file: ./scheduler/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/scheduler:latest
   
   build-test-push-backend:
     runs-on: ubuntu-latest
