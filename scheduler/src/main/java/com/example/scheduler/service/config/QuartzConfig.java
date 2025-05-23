@@ -4,6 +4,7 @@ import com.example.scheduler.service.jobs.CheckNewScheduleJob;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class QuartzConfig {

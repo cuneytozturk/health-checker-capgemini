@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +23,8 @@ class ExerciseScheduleRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        schedule1 = new ExerciseSchedule(null, 101L, 201L, LocalDateTime.of(2023, 10, 1, 8, 0));
-        schedule2 = new ExerciseSchedule(null, 102L, 202L, LocalDateTime.of(2023, 11, 1, 18, 0));
+        schedule1 = new ExerciseSchedule(null, 101L, 201L, LocalTime.of(8, 0));
+        schedule2 = new ExerciseSchedule(null, 102L, 202L, LocalTime.of(18, 0));
         exerciseScheduleRepository.save(schedule1);
         exerciseScheduleRepository.save(schedule2);
     }
@@ -32,7 +32,7 @@ class ExerciseScheduleRepositoryTest {
     @Test
     void saveExerciseSchedulePersistsData() {
         // Arrange
-        ExerciseSchedule newSchedule = new ExerciseSchedule(null, 103L, 203L, LocalDateTime.of(2023, 12, 1, 7, 0));
+        ExerciseSchedule newSchedule = new ExerciseSchedule(null, 103L, 203L, LocalTime.of(7, 0));
 
         // Act
         ExerciseSchedule savedSchedule = exerciseScheduleRepository.save(newSchedule);
@@ -41,7 +41,7 @@ class ExerciseScheduleRepositoryTest {
         assertNotNull(savedSchedule.getId());
         assertEquals(103L, savedSchedule.getUserId());
         assertEquals(203L, savedSchedule.getExerciseId());
-        assertEquals(LocalDateTime.of(2023, 12, 1, 7, 0), savedSchedule.getTime());
+        assertEquals(LocalTime.of(7, 0), savedSchedule.getTime());
     }
 
     @Test

@@ -26,18 +26,29 @@ public class ExerciseControllerIntegrationIT extends BaseIntegrationIT {
     @Autowired
     private ExerciseRepository exerciseRepository;
 
+    private Exercise exercise1;
+    private Exercise exercise2;
+
     @BeforeEach
     void setUp() {
-        // Clear the database before each test
+        // Clear the database and initialize test data
         exerciseRepository.deleteAll();
+
+        exercise1 = new Exercise(null, "Push Up", "A basic push-up exercise", "imageUrl1", "videoUrl1", 1L, 10);
+        exercise2 = new Exercise(null, "Squat", "A basic squat exercise", "imageUrl2", "videoUrl2", 1L, 15);
+
+        exerciseRepository.save(exercise1);
+        exerciseRepository.save(exercise2);
     }
 
     @Test
-    void getAllExercisesReturnsEmptyListInitially() throws Exception {
+    void getAllExercisesReturnsAllExercises() throws Exception {
         // Act & Assert
         mockMvc.perform(get("/api/exercises/getall"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].name").value("Push Up"))
+                .andExpect(jsonPath("$[1].name").value("Squat"));
     }
 
     @Test
@@ -45,10 +56,12 @@ public class ExerciseControllerIntegrationIT extends BaseIntegrationIT {
         // Arrange
         String exerciseJson = """
                 {
-                    "name": "Push Up",
-                    "description": "A basic push-up exercise",
-                    "imageUrl": "imageUrl",
-                    "videoUrl": "videoUrl"
+                    "name": "Plank",
+                    "description": "A core strength exercise",
+                    "imageUrl": "imageUrl3",
+                    "videoUrl": "videoUrl3",
+                    "categoryId": 2,
+                    "timeRequired": 5
                 }
                 """;
 
@@ -62,19 +75,15 @@ public class ExerciseControllerIntegrationIT extends BaseIntegrationIT {
         // Assert
         mockMvc.perform(get("/api/exercises/getall"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].name").value("Push Up"))
-                .andExpect(jsonPath("$[0].description").value("A basic push-up exercise"));
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[2].name").value("Plank"))
+                .andExpect(jsonPath("$[2].description").value("A core strength exercise"));
     }
 
     @Test
     void getExerciseByIdReturnsCorrectExercise() throws Exception {
-        // Arrange
-        Exercise exercise = new Exercise(null, "Push Up", "A basic push-up exercise", "imageUrl", "videoUrl");
-        Exercise savedExercise = exerciseRepository.save(exercise);
-
         // Act & Assert
-        mockMvc.perform(get("/api/exercises/get/" + savedExercise.getId()))
+        mockMvc.perform(get("/api/exercises/get/" + exercise1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Push Up"))
                 .andExpect(jsonPath("$.description").value("A basic push-up exercise"));
@@ -82,12 +91,8 @@ public class ExerciseControllerIntegrationIT extends BaseIntegrationIT {
 
     @Test
     void sendNotificationReturnsSuccessMessage() throws Exception {
-        // Arrange
-        Exercise exercise = new Exercise(null, "Push Up", "A basic push-up exercise", "imageUrl", "videoUrl");
-        Exercise savedExercise = exerciseRepository.save(exercise);
-
         // Act & Assert
-        mockMvc.perform(get("/api/exercises/sendnotification/" + savedExercise.getId()))
+        mockMvc.perform(get("/api/exercises/sendnotification/" + exercise1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Notification sent successfully!"));
     }

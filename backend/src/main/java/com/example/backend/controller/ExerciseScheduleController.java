@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.model.ExerciseSchedule;
+import com.example.backend.model.Preferences;
 import com.example.backend.service.ExerciseScheduleService;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.*;

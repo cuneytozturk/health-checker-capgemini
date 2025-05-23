@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.config.exception.EntityNotFoundException;
+import com.example.backend.config.exception.InvalidExerciseException;
 import com.example.backend.model.Exercise;
 import com.example.backend.repository.ExerciseRepository;
 import org.junit.jupiter.api.Test;
@@ -31,17 +32,17 @@ class ExerciseServiceTest {
 
     @Test
     void findAllReturnsAllExercises() {
-        //arrange
+        // Arrange
         List<Exercise> mockExercises = List.of(
-                new Exercise(1L, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl"),
-                new Exercise(2L, "Squat", "A basic squat exercise.","imageUrl", "videoUrl")
+                new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl", 1L, 10),
+                new Exercise(2L, "Squat", "A basic squat exercise.", "imageUrl", "videoUrl", 1L, 15)
         );
         when(exerciseRepository.findAll()).thenReturn(mockExercises);
 
-        //act
+        // Act
         List<Exercise> exercises = exerciseService.findAll();
 
-        //assert
+        // Assert
         assertEquals(2, exercises.size());
         assertEquals("Push Up", exercises.get(0).getName());
         verify(exerciseRepository, times(1)).findAll();
@@ -49,22 +50,33 @@ class ExerciseServiceTest {
 
     @Test
     void saveCallsRepositorySave() {
-        //arrange
-        Exercise exercise = new Exercise(1L, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
+        // Arrange
+        Exercise exercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl", 1L, 10);
 
-        //act
+        // Act
         exerciseService.save(exercise);
 
-        //assert
+        // Assert
         ArgumentCaptor<Exercise> captor = ArgumentCaptor.forClass(Exercise.class);
         verify(exerciseRepository, times(1)).save(captor.capture());
         assertEquals("Push Up", captor.getValue().getName());
     }
 
     @Test
+    void saveThrowsExceptionWhenExerciseIsInvalid() {
+        // Arrange
+        Exercise invalidExercise = new Exercise(null, null, null, null, null, null, 0);
+
+        // Act & Assert
+        InvalidExerciseException exception = assertThrows(InvalidExerciseException.class, () -> exerciseService.save(invalidExercise));
+        assertEquals("Exercise and its properties must not be null", exception.getMessage());
+        verify(exerciseRepository, never()).save(any());
+    }
+
+    @Test
     void findByIdReturnsExerciseWhenExists() {
         // Arrange
-        Exercise mockExercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl");
+        Exercise mockExercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl", 1L, 10);
         when(exerciseRepository.findById(1L)).thenReturn(Optional.of(mockExercise));
 
         // Act
@@ -90,7 +102,7 @@ class ExerciseServiceTest {
     @Test
     void sendNotificationCallsBotServiceClient() {
         // Arrange
-        Exercise mockExercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl");
+        Exercise mockExercise = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl", 1L, 10);
         when(exerciseRepository.findById(1L)).thenReturn(Optional.of(mockExercise));
 
         // Act

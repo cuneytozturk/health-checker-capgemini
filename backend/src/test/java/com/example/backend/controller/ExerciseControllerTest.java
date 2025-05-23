@@ -1,6 +1,8 @@
 package com.example.backend.controller;
+
 import com.example.backend.model.Exercise;
 import com.example.backend.service.ExerciseService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,44 +30,48 @@ class ExerciseControllerTest {
     @MockitoBean
     private ExerciseService exerciseService;
 
+    private Exercise exercise1;
+    private Exercise exercise2;
+
+    @BeforeEach
+    void setUp() {
+        exercise1 = new Exercise(1L, "Push Up", "A basic push up exercise.", "imageUrl", "videoUrl", 1L, 10);
+        exercise2 = new Exercise(2L, "Squat", "A basic squat exercise.", "imageUrl", "videoUrl", 2L, 15);
+    }
 
     @Test
     void getExercisesReturnsOk() throws Exception {
-        //arrange
-        when(exerciseService.findAll()).thenReturn(List.of(
-                new Exercise(1L,"Push Up", "A basic push up exercise.","imageUrl", "videoUrl"),
-                new Exercise(2L,"Squat", "A basic squat exercise.","imageUrl" ,"videoUrl")
-        ));
+        // Arrange
+        when(exerciseService.findAll()).thenReturn(List.of(exercise1, exercise2));
 
-        //act and assert
+        // Act and Assert
         mockMvc.perform(get("/api/exercises/getall"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\"}," +
-                        "{\"id\":2,\"name\":\"Squat\",\"description\":\"A basic squat exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\"}]"));
+                .andExpect(content().json("[{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"categoryId\":1,\"timeRequired\":10}," +
+                        "{\"id\":2,\"name\":\"Squat\",\"description\":\"A basic squat exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"categoryId\":2,\"timeRequired\":15}]"));
     }
 
     @Test
     void addExerciseReturnsOk() throws Exception {
-        //arrange
-        String exerciseJson = "{\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\"}";
-        Exercise exercise = new Exercise(1L, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
-        doNothing().when(exerciseService).save(exercise);
+        // Arrange
+        String exerciseJson = "{\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"category\":1,\"timeRequired\":10}";
+        doNothing().when(exerciseService).save(any(Exercise.class));
 
-        //act and assert
+        // Act and Assert
         mockMvc.perform(post("/api/exercises/add")
-                .contentType("application/json")
-                .content(exerciseJson))
+                        .contentType("application/json")
+                        .content(exerciseJson))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Exercise added successfully!"));
     }
 
     @Test
     void sendNotificationReturnsOk() throws Exception {
-        //arrange
+        // Arrange
         Long exerciseId = 1L;
         doNothing().when(exerciseService).sendNotification(exerciseId);
 
-        //act and assert
+        // Act and Assert
         mockMvc.perform(get("/api/exercises/sendnotification/{id}", exerciseId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Notification sent successfully!"));
@@ -73,14 +79,13 @@ class ExerciseControllerTest {
 
     @Test
     void getExerciseByIdReturnsOk() throws Exception {
-        //arrange
+        // Arrange
         Long exerciseId = 1L;
-        Exercise exercise = new Exercise(exerciseId, "Push Up", "A basic push up exercise.","imageUrl", "videoUrl");
-        when(exerciseService.findById(exerciseId)).thenReturn(exercise);
+        when(exerciseService.findById(exerciseId)).thenReturn(exercise1);
 
-        //act and assert
+        // Act and Assert
         mockMvc.perform(get("/api/exercises/get/{id}", exerciseId))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\"}"));
+                .andExpect(content().json("{\"id\":1,\"name\":\"Push Up\",\"description\":\"A basic push up exercise.\",\"imageUrl\":\"imageUrl\",\"videoUrl\":\"videoUrl\",\"categoryId\":1,\"timeRequired\":10}"));
     }
 }
