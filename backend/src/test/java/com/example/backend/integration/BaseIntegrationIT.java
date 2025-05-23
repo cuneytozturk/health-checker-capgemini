@@ -20,7 +20,8 @@ public abstract class BaseIntegrationIT {
             .withUsername("testuser")
             .withPassword("testpass")
             .withExposedPorts(3306)
-            .withStartupTimeout(Duration.ofMinutes(2));
+            .withEnv("INNODB_REDO_LOG_CAPACITY", "128M")
+            .withStartupTimeout(Duration.ofMinutes(1));
 
 
     @DynamicPropertySource
