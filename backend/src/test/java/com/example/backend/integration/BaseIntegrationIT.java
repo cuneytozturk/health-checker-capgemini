@@ -1,5 +1,6 @@
 package com.example.backend.integration;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -10,24 +11,21 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
 
-@Testcontainers
 @SpringBootTest
 public abstract class BaseIntegrationIT {
 
-    @Container
     private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0.33")
             .withDatabaseName("testdb")
             .withUsername("testuser")
             .withPassword("testpass")
-            .withExposedPorts(3306)
-            .withEnv("INNODB_REDO_LOG_CAPACITY", "128M")
-            .withStartupTimeout(Duration.ofMinutes(1));
+            .withExposedPorts(3306);
 
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mysqlContainer::getUsername);
-        registry.add("spring.datasource.password", mysqlContainer::getPassword);
+    @BeforeAll
+    static void beforeAll() {
+        //register JDBC properties
+        mysqlContainer.start();
+        System.setProperty("spring.datasource.url", mysqlContainer.getJdbcUrl());
+        System.setProperty("spring.datasource.username", mysqlContainer.getUsername());
+        System.setProperty("spring.datasource.password", mysqlContainer.getPassword());
     }
 }
