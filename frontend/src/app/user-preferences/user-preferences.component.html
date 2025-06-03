@@ -3,6 +3,7 @@
     <h2 class="text-2xl font-semibold mb-6">User Preferences Survey</h2>
 
     <form (ngSubmit)="savePreference()" #prefForm="ngForm" class="add-form">
+      <div>Form valid: {{ prefForm.form.valid }}</div>
       <div class="mb-4 flex flex-col">
         <label class="mb-1 font-medium">Welke pijnklachten ervaar je tijdens het werken?</label>
         <select
@@ -11,7 +12,7 @@
           required
           class="border rounded px-3 py-2"
         >
-          <option value="" disabled selected>Kies een categorie</option>
+          <option [ngValue]="null" disabled selected>Kies een categorie</option>
           <option *ngFor="let cat of categories" [value]="cat.id">
             {{ cat.name }} - {{ cat.description }}
           </option>
