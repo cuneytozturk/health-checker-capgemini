@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+@Component
 public class ExerciseJob implements Job {
     @Value("${api.base.url}")
     private String apiBaseUrl;
@@ -36,9 +37,9 @@ public class ExerciseJob implements Job {
         String url = apiBaseUrl + apiNotificationUrl + exerciseId;
         try {
             restTemplate.getForObject(url, String.class);
-            logger.info("Notification sent for exercise ID: " + exerciseId + " at " + notificationTimeString);
+            logger.info("Notification sent for exercise ID: {} at {}", exerciseId, notificationTimeString);
         } catch (Exception e) {
-            logger.error("Error sending notification for exercise ID: " + exerciseId, e);
+            logger.error("Error sending notification for exercise ID: {}", exerciseId, e);
         }
     }
 }

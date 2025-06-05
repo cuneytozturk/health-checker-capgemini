@@ -1,13 +1,27 @@
 package com.example.scheduler.service.config;
 
+import com.example.scheduler.service.observer.JobSchedulerObserver;
+import com.example.scheduler.service.observer.ScheduleNotifier;
 import com.example.scheduler.service.jobs.CheckNewScheduleJob;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class QuartzConfig {
+
+    @Bean
+    public JobSchedulerObserver jobSchedulerObserver(Scheduler scheduler) {
+        return new JobSchedulerObserver(scheduler);
+    }
+
+    @Bean
+    public ScheduleNotifier scheduleNotifier(JobSchedulerObserver jobSchedulerObserver) {
+        ScheduleNotifier notifier = new ScheduleNotifier();
+        notifier.addObserver(jobSchedulerObserver);
+        return notifier;
+    }
+
 
     @Bean
     public JobDetail checkNewScheduleJobDetail() {

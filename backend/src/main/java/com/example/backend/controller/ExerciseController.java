@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/exercises", produces = "application/json")
 @CrossOrigin(origins = "${api.frontend.url}")
-public class ExerciseController {
+public class  ExerciseController {
     private final ExerciseService exerciseService;
     private final Logger logger = org.slf4j.LoggerFactory.getLogger(ExerciseController.class);
 
