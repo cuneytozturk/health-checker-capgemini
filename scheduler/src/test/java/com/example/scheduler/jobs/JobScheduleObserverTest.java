@@ -2,23 +2,37 @@ package com.example.scheduler.jobs;
 
 import com.example.scheduler.model.ExerciseSchedule;
 import com.example.scheduler.service.observer.JobSchedulerObserver;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.quartz.*;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class JobScheduleObserverTest {
+    @Mock
+    private Scheduler scheduler;
 
-    private final Scheduler scheduler = mock(Scheduler.class);
-    private final JobSchedulerObserver jobSchedulerObserver = new JobSchedulerObserver(scheduler);
+    private JobSchedulerObserver jobSchedulerObserver;
+
+    @BeforeEach
+    void setUp() {
+        jobSchedulerObserver = new JobSchedulerObserver(scheduler);
+    }
+
 
     @Test
     void onNewSchedule_SchedulesJobWhenNotExists() throws SchedulerException {
         // Arrange
-        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalTime.of(10, 0));
+        LocalDateTime createdDate = LocalDateTime.now().minusMinutes(5);
+        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalTime.of(10, 0), createdDate);
         JobKey jobKey = new JobKey("job_" + schedule.getId());
         when(scheduler.checkExists(jobKey)).thenReturn(false);
 
@@ -42,7 +56,8 @@ class JobScheduleObserverTest {
     @Test
     void onNewSchedule_DoesNotScheduleJobWhenExists() throws SchedulerException {
         // Arrange
-        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalTime.of(10, 0));
+        LocalDateTime createdDate = LocalDateTime.now().minusMinutes(5);
+        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalTime.of(10, 0), createdDate);
         JobKey jobKey = new JobKey("job_" + schedule.getId());
         when(scheduler.checkExists(jobKey)).thenReturn(true);
 
@@ -56,7 +71,8 @@ class JobScheduleObserverTest {
     @Test
     void onNewSchedule_HandlesSchedulerException() throws SchedulerException {
         // Arrange
-        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalTime.of(10, 0));
+        LocalDateTime createdDate = LocalDateTime.now().minusMinutes(5);
+        ExerciseSchedule schedule = new ExerciseSchedule(1L, 1L, 1L, LocalTime.of(10, 0), createdDate);
         JobKey jobKey = new JobKey("job_" + schedule.getId());
         when(scheduler.checkExists(jobKey)).thenThrow(new SchedulerException("Scheduler error"));
 

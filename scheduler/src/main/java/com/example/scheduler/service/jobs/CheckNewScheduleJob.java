@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -25,9 +26,10 @@ public class CheckNewScheduleJob implements Job {
     @Override
     public void execute(JobExecutionContext context) {
         logger.info("Executing CheckNewScheduleJob...");
-        List<ExerciseSchedule> schedules = exerciseScheduleRepository.findAll();
+        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(1);
+        List<ExerciseSchedule> newSchedules = exerciseScheduleRepository.findByCreatedDateAfter(cutoffTime);
 
-        for (ExerciseSchedule schedule : schedules) {
+        for (ExerciseSchedule schedule : newSchedules) {
             scheduleNotifier.notifyObservers(schedule);
         }
     }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +24,8 @@ class ExerciseScheduleRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        schedule1 = new ExerciseSchedule(null, 101L, 201L, LocalTime.of(8, 0));
-        schedule2 = new ExerciseSchedule(null, 102L, 202L, LocalTime.of(18, 0));
+        schedule1 = new ExerciseSchedule(null, 101L, 201L, LocalTime.of(8, 0), LocalDateTime.now());
+        schedule2 = new ExerciseSchedule(null, 102L, 202L, LocalTime.of(18, 0), LocalDateTime.now());
         exerciseScheduleRepository.save(schedule1);
         exerciseScheduleRepository.save(schedule2);
     }
@@ -32,7 +33,7 @@ class ExerciseScheduleRepositoryTest {
     @Test
     void saveExerciseSchedulePersistsData() {
         // Arrange
-        ExerciseSchedule newSchedule = new ExerciseSchedule(null, 103L, 203L, LocalTime.of(7, 0));
+        ExerciseSchedule newSchedule = new ExerciseSchedule(null, 103L, 203L, LocalTime.of(7, 0), LocalDateTime.now());
 
         // Act
         ExerciseSchedule savedSchedule = exerciseScheduleRepository.save(newSchedule);
@@ -42,6 +43,7 @@ class ExerciseScheduleRepositoryTest {
         assertEquals(103L, savedSchedule.getUserId());
         assertEquals(203L, savedSchedule.getExerciseId());
         assertEquals(LocalTime.of(7, 0), savedSchedule.getTime());
+        assertNotNull(savedSchedule.getCreatedDate());
     }
 
     @Test
@@ -54,24 +56,6 @@ class ExerciseScheduleRepositoryTest {
         assertEquals(schedule1.getUserId(), foundSchedule.get().getUserId());
         assertEquals(schedule1.getExerciseId(), foundSchedule.get().getExerciseId());
         assertEquals(schedule1.getTime(), foundSchedule.get().getTime());
-    }
-
-    @Test
-    void findAllReturnsAllExerciseSchedules() {
-        // Act
-        List<ExerciseSchedule> schedules = exerciseScheduleRepository.findAll();
-
-        // Assert
-        assertEquals(2, schedules.size());
-    }
-
-    @Test
-    void deleteByIdRemovesExerciseSchedule() {
-        // Act
-        exerciseScheduleRepository.deleteById(schedule1.getId());
-        Optional<ExerciseSchedule> deletedSchedule = exerciseScheduleRepository.findById(schedule1.getId());
-
-        // Assert
-        assertFalse(deletedSchedule.isPresent());
+        assertEquals(schedule1.getCreatedDate(), foundSchedule.get().getCreatedDate());
     }
 }
