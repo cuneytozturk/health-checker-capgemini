@@ -67,6 +67,16 @@ You should see the Health Checker application front-end and a list of available 
 
 4. It should open a chat emulating a Teams chat environment.
 
+### 5. Creating an exercise schedule
+
+1. Navigate to **http://localhost:4200/userpreferences**
+
+2. Configure preferences for notifications.
+
+3. After clicking save, an exercise schedule will be generated and the application should redirect to http://localhost:4200/exerciseschedule
+
+4. For testing notifications you can manually add an exercise schedule entry at the top of the schedule page.
+
 
 
 
