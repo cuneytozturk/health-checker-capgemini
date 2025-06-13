@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.data.domain.Example;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,8 @@ class ExerciseScheduleServiceTest {
         exerciseScheduleService = new ExerciseScheduleService(exerciseScheduleRepository, exerciseRepository);
 
         exerciseSchedules = List.of(
-                new ExerciseSchedule(1L, 101L, 201L, LocalTime.of(8, 0)),
-                new ExerciseSchedule(2L, 102L, 202L, LocalTime.of(18, 0))
+                new ExerciseSchedule(1L, 101L, 201L, LocalTime.of(8, 0), LocalDateTime.now()),
+                new ExerciseSchedule(2L, 102L, 202L, LocalTime.of(18, 0), LocalDateTime.now())
         );
     }
 
@@ -96,7 +97,7 @@ class ExerciseScheduleServiceTest {
     @Test
     void addExerciseScheduleSavesSchedule() {
         // Arrange
-        ExerciseSchedule newSchedule = new ExerciseSchedule(null, 103L, 203L, LocalTime.of(7, 0));
+        ExerciseSchedule newSchedule = new ExerciseSchedule(null, 103L, 203L, LocalTime.of(7, 0), LocalDateTime.now());
         when(exerciseScheduleRepository.save(any(ExerciseSchedule.class))).thenReturn(newSchedule);
 
         // Act
@@ -109,12 +110,13 @@ class ExerciseScheduleServiceTest {
         assertEquals(103L, capturedSchedule.getUserId());
         assertEquals(203L, capturedSchedule.getExerciseId());
         assertEquals(LocalTime.of(7, 0), capturedSchedule.getTime());
+        assertNotNull(capturedSchedule.getCreatedDate());
     }
 
     @Test
     void addExerciseScheduleThrowsExceptionWhenNullValues() {
         // Arrange
-        ExerciseSchedule newSchedule = new ExerciseSchedule(null, null, null, null);
+        ExerciseSchedule newSchedule = new ExerciseSchedule(null, null, null, null, null);
 
         // Act & Assert
         assertThrows(InvalidScheduleException.class, () -> exerciseScheduleService.addExerciseSchedule(newSchedule));

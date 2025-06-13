@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS exercise_schedule (
                                                  user_id BIGINT NOT NULL,
                                                  exercise_id BIGINT NOT NULL,
                                                  time TIME NOT NULL,
+                                                 created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
                                                  CONSTRAINT fk_exercise
                                                      FOREIGN KEY (exercise_id)
                                                          REFERENCES exercise (id)

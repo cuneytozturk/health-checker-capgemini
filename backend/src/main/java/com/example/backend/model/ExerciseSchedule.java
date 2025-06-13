@@ -1,9 +1,14 @@
 package com.example.backend.model;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class ExerciseSchedule {
 
     @Id
@@ -16,14 +21,19 @@ public class ExerciseSchedule {
 
     private LocalTime time; // Changed from LocalDateTime to LocalTime
 
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdDate;
+
     public ExerciseSchedule() {
     }
 
-    public ExerciseSchedule(Long id, Long userId, Long exerciseId, LocalTime time) {
+    public ExerciseSchedule(Long id, Long userId, Long exerciseId, LocalTime time, LocalDateTime createdDate) {
         this.id = id;
         this.userId = userId;
         this.exerciseId = exerciseId;
         this.time = time;
+        this.createdDate = createdDate;
     }
 
     // Getters and Setters
@@ -57,5 +67,13 @@ public class ExerciseSchedule {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }
