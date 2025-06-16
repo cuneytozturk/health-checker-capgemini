@@ -1,0 +1,38 @@
+<div class="flex min-h-screen bg-gray-50 p-6 font-sans text-gray-900">
+
+<app-navbar></app-navbar>
+<div class="flex-1 max-w-4xl mx-auto px-6 py-8 bg-white rounded-2xl shadow-md">
+  <h2 class="text-2xl font-semibold mb-6">Oefenschema</h2>
+    <form (ngSubmit)="addSchedule()" #scheduleForm="ngForm" class="add-form">
+      <mat-form-field appearance="fill">
+        <mat-label>Oefening ID</mat-label>
+        <input matInput type="number" [(ngModel)]="newSchedule.exerciseId" name="exerciseId" required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Geplande tijd</mat-label>
+        <input
+          matInput
+          [matTimepicker]="picker"
+          [(ngModel)]="newSchedule.time"
+          name="time"
+          required
+          readonly
+        >
+        <mat-timepicker #picker></mat-timepicker>
+        <button mat-icon-button matSuffix (click)="picker.open()" type="button">
+          <mat-icon>access_time</mat-icon>
+    </button>
+  </mat-form-field>
+  <button
+  mat-raised-button
+  color="primary"
+  type="submit"
+  [disabled]="!scheduleForm.form.valid"
+  class="mt-4 ml-4 bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition disabled:bg-blue-300 disabled:cursor-not-allowed"
+>
+  Toevoegen
+</button>
+</form>
+  <app-exercise-schedule [schedules]="schedules" class=""></app-exercise-schedule>
+</div>
+</div>

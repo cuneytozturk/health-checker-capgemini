@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { take } from 'rxjs/operators';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 const PREFERENCE_URL = 'http://localhost:8080/api/preferences/101';
 const ADD_PREFERENCE_URL = 'http://localhost:8080/api/preferences';
@@ -26,7 +27,7 @@ interface Category {
 @Component({
   selector: 'app-user-preferences',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent],
   templateUrl: './user-preferences.component.html',
   styleUrls: ['./user-preferences.component.css']
 })
