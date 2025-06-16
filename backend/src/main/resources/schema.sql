@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS category (
 CREATE TABLE IF NOT EXISTS exercise (
                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                         name VARCHAR(255) NOT NULL,
-                                        description VARCHAR(1000),
+                                        description VARCHAR(2000),
                                         image_url VARCHAR(255) NOT NULL,
-                                        video_url VARCHAR(255) NOT NULL,
+                                        video_url VARCHAR(1000) NOT NULL,
                                         category_id BIGINT NOT NULL,
                                         time_required INT NOT NULL,
                                         CONSTRAINT fk_category

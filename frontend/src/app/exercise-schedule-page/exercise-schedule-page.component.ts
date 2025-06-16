@@ -48,23 +48,26 @@ export class ExerciseSchedulePageComponent implements OnInit {
   }
 
   addSchedule() {
-    if (!this.newSchedule.exerciseId || !this.newSchedule.time) return;
+  if (!this.newSchedule.exerciseId || !this.newSchedule.time) return;
 
-    let timeValue: any = this.newSchedule.time;
-    if (timeValue instanceof Date) {
-      // format as needed
-    }
-
-    const payload = {
-      userId: this.newSchedule.userId,
-      exerciseId: this.newSchedule.exerciseId,
-      time: timeValue
-    };
-
-    this.http.post(this.addUrl, payload).subscribe(() => {
-      this.newSchedule.exerciseId = null;
-      this.newSchedule.time = '';
-      this.loadSchedules();
-    });
+  let timeValue: any = this.newSchedule.time;
+  if (timeValue instanceof Date) {
+    const hours = timeValue.getHours().toString().padStart(2, '0');
+    const minutes = timeValue.getMinutes().toString().padStart(2, '0');
+    timeValue = `${hours}:${minutes}`;
   }
+
+  const payload = {
+    userId: this.newSchedule.userId,
+    exerciseId: this.newSchedule.exerciseId,
+    time: timeValue
+  };
+
+  // todo backend should return JSON instead of text
+  this.http.post(this.addUrl, payload, { responseType: 'text' }).subscribe(() => {
+    this.newSchedule.exerciseId = null;
+    this.newSchedule.time = '';
+    this.loadSchedules();
+  });
+}
 }

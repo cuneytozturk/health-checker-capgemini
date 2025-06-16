@@ -33,7 +33,7 @@ public class QuartzConfig {
 
     @Bean
     public Trigger checkNewScheduleTrigger() {
-        final int intervalInSeconds = 60;
+        final int intervalInSeconds = 5;
         return TriggerBuilder.newTrigger()
                 .forJob(checkNewScheduleJobDetail())
                 .withIdentity("checkNewScheduleTrigger")

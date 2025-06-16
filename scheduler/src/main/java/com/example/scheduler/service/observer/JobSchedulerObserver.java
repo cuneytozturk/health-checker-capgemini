@@ -5,10 +5,12 @@ import com.example.scheduler.service.jobs.ExerciseJob;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
 import java.util.UUID;
 
+@Component
 public class JobSchedulerObserver implements ScheduleObserver {
     private final Scheduler scheduler;
     private static final Logger logger = LoggerFactory.getLogger(JobSchedulerObserver.class);

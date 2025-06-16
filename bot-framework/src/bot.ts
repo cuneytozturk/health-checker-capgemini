@@ -27,7 +27,7 @@ export class EchoBot extends ActivityHandler {
             const membersAdded = context.activity.membersAdded;
             for (const member of membersAdded) {
                 if (member.id !== context.activity.recipient.id) {
-                    const welcomeMessage = 'Welcome to the Proactive Bot sample.  Navigate to http://localhost:3978/api/notify to proactively message everyone who has previously messaged this bot.';
+                    const welcomeMessage = 'Welkom bij de Health Checker bot! Navigeer naar http://localhost:4200 om je voorkeuren in te stellen.';
                     await context.sendActivity(welcomeMessage);
                 }
             }
