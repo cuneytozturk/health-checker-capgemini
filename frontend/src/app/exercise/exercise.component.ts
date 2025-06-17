@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ExerciseService } from '../exercise.service';
 import { RouterModule } from '@angular/router';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-exercise',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule , NavbarComponent],
   templateUrl: './exercise.component.html',
   styleUrl: './exercise.component.css'
 })

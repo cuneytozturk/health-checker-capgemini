@@ -3,12 +3,16 @@ import { UserPreferencesComponent } from './user-preferences.component';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { provideRouter } from '@angular/router';
+
+
 
 describe('UserPreferencesComponent', () => {
   let component: UserPreferencesComponent;
   let fixture: ComponentFixture<UserPreferencesComponent>;
   let httpMock: HttpTestingController;
   let routerSpy: jasmine.SpyObj<Router>;
+  let router: Router;
 
   const mockPreference = {
     id: 1,
@@ -23,21 +27,25 @@ describe('UserPreferencesComponent', () => {
     { id: 2, name: 'Cat2', description: 'desc2' }
   ];
 
-  beforeEach(async () => {
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    await TestBed.configureTestingModule({
-      imports: [UserPreferencesComponent],
-      providers: [
-        { provide: Router, useValue: routerSpy },
-        provideHttpClient(),
-        provideHttpClientTesting()
-      ]
-    }).compileComponents();
 
-    fixture = TestBed.createComponent(UserPreferencesComponent);
-    component = fixture.componentInstance;
-    httpMock = TestBed.inject(HttpTestingController);
-  });
+beforeEach(async () => {
+  await TestBed.configureTestingModule({
+    imports: [UserPreferencesComponent],
+    providers: [
+      provideRouter([]),
+      provideHttpClient(),
+      provideHttpClientTesting()
+    ]
+  }).compileComponents();
+
+  fixture = TestBed.createComponent(UserPreferencesComponent);
+  component = fixture.componentInstance;
+  httpMock = TestBed.inject(HttpTestingController);
+
+  // Spy on the real router's navigate method
+  router = TestBed.inject(Router);
+  spyOn(router, 'navigate');
+});
 
   afterEach(() => {
     httpMock.verify();
@@ -53,7 +61,7 @@ describe('UserPreferencesComponent', () => {
     // Arrange & Act
     component.ngOnInit();
     const req = httpMock.expectOne('http://localhost:8080/api/preferences/101');
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method).toEqual('GET');
     req.flush(mockPreference);
 
     const catReq = httpMock.expectOne('http://localhost:8080/api/categories');
@@ -143,7 +151,7 @@ describe('UserPreferencesComponent', () => {
 
     tick();
     // Assert
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/exerciseschedule']);
+    expect(router.navigate).toHaveBeenCalledWith(['/exerciseschedule']);
   }));
 
   it('savePreference should handle error', fakeAsync(() => {
@@ -157,7 +165,7 @@ describe('UserPreferencesComponent', () => {
     req.error(new ErrorEvent('Network error'));
     tick();
     // Assert
-    expect(routerSpy.navigate).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
   }));
 
   it('resetNewPreference should reset fields', () => {

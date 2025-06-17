@@ -1,45 +1,20 @@
-<div class="min-h-screen bg-gray-50 px-6 py-10 font-sans text-gray-900">
-  <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-md p-8">
-    <h2 class="text-2xl font-semibold mb-6">User Exercise Schedule</h2>
-
-
-    <form (ngSubmit)="addSchedule()" #scheduleForm="ngForm" class="add-form">
-      <mat-form-field appearance="fill">
-        <mat-label>Exercise ID</mat-label>
-        <input matInput type="number" [(ngModel)]="newSchedule.exerciseId" name="exerciseId" required>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Planned Time</mat-label>
-        <input
-          matInput
-          [matTimepicker]="picker"
-          [(ngModel)]="newSchedule.time"
-          name="time"
-          required
-          readonly
-        >
-        <mat-timepicker #picker></mat-timepicker>
-        <button mat-icon-button matSuffix (click)="picker.open()" type="button">
-          <mat-icon>access_time</mat-icon>
-    </button>
-  </mat-form-field>
-  <button mat-raised-button color="primary" type="submit" [disabled]="!scheduleForm.form.valid">Add</button>
-</form>
-
+<div class="max-w-3xl mx-auto px-6 py-8 bg-white rounded-2xl shadow-md">
     @if (schedules.length > 0) {
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden text-left">
           <thead class="bg-gray-100">
             <tr>
-              <th class="px-6 py-3 text-sm font-medium text-gray-700">Exercise name</th>
-              <th class="px-6 py-3 text-sm font-medium text-gray-700">Planned Time</th>
+              <th class="px-6 py-3 text-sm font-medium text-gray-700">Oefening naam</th>
+              <th class="px-6 py-3 text-sm font-medium text-gray-700">Geplande tijd</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
             @for (schedule of schedules; track schedule.id) {
               <tr class="hover:bg-gray-50 transition">
                 <a [routerLink]="['/exercises', schedule.exerciseId]">
-                <td class="px-6 py-4 text-sm text-gray-900">{{ getExerciseName(schedule.exerciseId) }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900">
+                {{ getExerciseName(schedule.exerciseId) }}
+                </td>
                 </a>
                 <td class="px-6 py-4 text-sm text-gray-600">{{ schedule.time}}</td>
               </tr>
@@ -48,7 +23,6 @@
         </table>
       </div>
     } @else {
-      <p class="text-gray-500 mt-4">No exercise schedule found.</p>
+      <p class="text-gray-500 mt-4">Geen oefenschema gevonden. Heb je je voorkeuren al ingesteld?</p>
     }
-  </div>
 </div>
