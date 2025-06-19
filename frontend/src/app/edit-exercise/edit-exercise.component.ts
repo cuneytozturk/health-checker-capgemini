@@ -1,64 +1,102 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { EventEmitter, Output } from '@angular/core';
-
 import { ExerciseService } from '../exercise.service';
-
-interface Exercise {
-  id: number;
-  name: string;
-  description: string;
-  imageUrl: string;
-  videoUrl: string;
-  categoryId: number;
-  timeRequired: number;
-}
 
 @Component({
   selector: 'app-edit-exercise',
-  standalone: true,
   templateUrl: './edit-exercise.component.html',
-  styleUrl: './edit-exercise.component.css',
+  styleUrls: ['./edit-exercise.component.css'],
+  standalone: true,
   imports: [FormsModule]
 })
+export class EditExerciseComponent implements OnChanges {
+  @Input() exercise: any; // Replace 'any' with your Exercise interface
+  @Output() exerciseAdded = new EventEmitter<void>();
+  @Output() exerciseUpdated = new EventEmitter<void>();
+  @Output() editCancelled = new EventEmitter<void>();
 
-export class EditExerciseComponent {
-  formSubmitted = false;
-
-  constructor(private exerciseService: ExerciseService) {}
-
-  newExercise: Omit<Exercise, 'id'> = {
+  formModel = {
     name: '',
     description: '',
     imageUrl: '',
     videoUrl: '',
-    categoryId: null as any,
-    timeRequired: null as any
+    categoryId: 0,
+    timeRequired: 0
   };
 
-@Output() exerciseAdded = new EventEmitter<void>();
+  editingId: number | null = null;
+  formSubmitted = false;
 
-addExercise(form: NgForm) {
+  constructor(private exerciseService: ExerciseService) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['exercise'] && this.exercise) {
+      this.editingId = this.exercise.id;
+      this.formModel = {
+        name: this.exercise.name || '',
+        description: this.exercise.description || '',
+        imageUrl: this.exercise.imageUrl || '',
+        videoUrl: this.exercise.videoUrl || '',
+        categoryId: this.exercise.categoryId || 0,
+        timeRequired: this.exercise.timeRequired || 0
+      };
+    } else if (!this.exercise) {
+      this.editingId = null;
+      this.resetForm();
+    }
+  }
+
+  onSubmit(form: NgForm) {
     this.formSubmitted = true;
     if (form.invalid) {
       return;
     }
-    this.exerciseService.addExercise(this.newExercise).subscribe({
+    if (this.editingId) {
+      this.updateExercise();
+    } else {
+      this.addExercise();
+    }
+  }
+
+  addExercise() {
+    this.exerciseService.editExercise(this.formModel).subscribe({
       next: () => {
-        this.resetForm();
         this.exerciseAdded.emit();
+        this.resetForm();
+      },
+      error: () => {
+        // handle error
+      }
+    });
+  }
+
+  updateExercise() {
+    const payload = { ...this.formModel, id: this.editingId };
+    this.exerciseService.editExercise(payload).subscribe({
+      next: () => {
+        this.exerciseUpdated.emit();
+        this.resetForm();
+      },
+      error: () => {
+        // handle error
       }
     });
   }
 
   resetForm() {
-    this.newExercise = {
+    this.formModel = {
       name: '',
       description: '',
       imageUrl: '',
       videoUrl: '',
-      categoryId: null as any,
-      timeRequired: null as any
+      categoryId: 0,
+      timeRequired: 0
     };
+    this.editingId = null;
+  }
+
+  cancelEdit() {
+    this.editCancelled.emit();
+    this.resetForm();
   }
 }

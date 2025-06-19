@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ExerciseService {
-
   private apiUrl = 'http://localhost:8080/api/exercises/';
 
   constructor(private http: HttpClient) { }
@@ -19,8 +18,12 @@ export class ExerciseService {
     return this.http.get<any>(`${this.apiUrl}get/${id}`);
   }
 
-  addExercise(payload: any): Observable<any> {
-    return this.http.post(this.apiUrl + 'add', payload, { responseType: 'text' });
+  editExercise(payload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}add`, payload, { responseType: 'text' });
+  }
+
+  deleteExercise(exerciseId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}delete/${exerciseId}`, { responseType: 'text' });
   }
 
 }

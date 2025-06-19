@@ -54,4 +54,13 @@ public class ExerciseService {
         return exerciseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Exercise with id " + id + " not found"));
     }
+
+    public void deleteById(Long id) {
+        logger.info("Deleting exercise with id: {}", id);
+        if (!exerciseRepository.existsById(id)) {
+            throw new EntityNotFoundException("Exercise with id " + id + " not found");
+        }
+        exerciseRepository.deleteById(id);
+        logger.info("Exercise with id {} deleted successfully", id);
+    }
 }

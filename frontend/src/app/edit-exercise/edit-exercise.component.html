@@ -1,11 +1,11 @@
-<form #exerciseForm="ngForm" (ngSubmit)="addExercise(exerciseForm)" class="add-form">
+<form #exerciseForm="ngForm" (ngSubmit)="onSubmit(exerciseForm)" class="add-form">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
           type="text"
           class="border rounded px-3 py-2"
           placeholder="Name"
           name="name"
-          [(ngModel)]="newExercise.name"
+          [(ngModel)]="formModel.name"
           required
         />
         <input
@@ -13,21 +13,21 @@
           class="border rounded px-3 py-2"
           placeholder="Image URL"
           name="imageUrl"
-          [(ngModel)]="newExercise.imageUrl"
+          [(ngModel)]="formModel.imageUrl"
         />
         <input
           type="text"
           class="border rounded px-3 py-2"
           placeholder="Video URL"
           name="videoUrl"
-          [(ngModel)]="newExercise.videoUrl"
+          [(ngModel)]="formModel.videoUrl"
         />
         <input
           type="number"
           class="border rounded px-3 py-2"
           placeholder="Category ID"
           name="categoryId"
-          [(ngModel)]="newExercise.categoryId"
+          [(ngModel)]="formModel.categoryId"
           required
         />
         <input
@@ -35,7 +35,7 @@
           class="border rounded px-3 py-2"
           placeholder="Time Required (minutes)"
           name="timeRequired"
-          [(ngModel)]="newExercise.timeRequired"
+          [(ngModel)]="formModel.timeRequired"
           required
         />
       </div>
@@ -43,7 +43,7 @@
         class="border rounded px-3 py-2 w-full mt-3"
         placeholder="Description"
         name="description"
-        [(ngModel)]="newExercise.description"
+        [(ngModel)]="formModel.description"
         required
       ></textarea>
       @if(formSubmitted && exerciseForm.invalid) {
@@ -55,6 +55,6 @@
         type="submit"
         class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
       >
-        Add Exercise
+        Save
       </button>
     </form>

@@ -43,4 +43,12 @@ public class  ExerciseController {
         logger.info("Fetching exercise with id: {}", id);
         return exerciseService.findById(id);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteExercise(@PathVariable Long id) {
+        logger.info("Deleting exercise with id: {}", id);
+        exerciseService.deleteById(id);
+        return "Exercise deleted successfully!";
+    }
+
 }

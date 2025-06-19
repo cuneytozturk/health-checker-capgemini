@@ -43,7 +43,22 @@ export class ExerciseComponent {
   exerciseUpdated() {
     this.showAddForm = false;
     this.loadExercises();
+    this.stopEdit();
   }
 
-  
+  editingExerciseId: number | null = null;
+
+  startEdit(exerciseId: number) {
+    this.editingExerciseId = exerciseId;
+  }
+
+  stopEdit() {
+    this.editingExerciseId = null;
+  }
+
+  deleteExercise(exerciseId: number) {
+    this.exerciseService.deleteExercise(exerciseId).subscribe(() => {
+      this.loadExercises();
+    });
+  }
 }
