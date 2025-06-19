@@ -18,4 +18,10 @@ export class ExerciseService {
   getExerciseById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}get/${id}`);
   }
+
+  addExercise(payload: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'add', payload, { responseType: 'text' });
+  }
+
 }
+

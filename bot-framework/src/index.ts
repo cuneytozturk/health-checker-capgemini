@@ -147,7 +147,8 @@ server.post('/api/notify', (req, res, next) => {
                 },
                 {
                   "type": "TextBlock",
-                  "text": description
+                  "text": description,
+                  "wrap": true
                 }
               ],
               "actions": [
