@@ -1,0 +1,60 @@
+<form #exerciseForm="ngForm" (ngSubmit)="onSubmit(exerciseForm)" class="add-form">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input
+          type="text"
+          class="border rounded px-3 py-2"
+          placeholder="Name"
+          name="name"
+          [(ngModel)]="formModel.name"
+          required
+        />
+        <input
+          type="text"
+          class="border rounded px-3 py-2"
+          placeholder="Image URL"
+          name="imageUrl"
+          [(ngModel)]="formModel.imageUrl"
+        />
+        <input
+          type="text"
+          class="border rounded px-3 py-2"
+          placeholder="Video URL"
+          name="videoUrl"
+          [(ngModel)]="formModel.videoUrl"
+        />
+        <input
+          type="number"
+          class="border rounded px-3 py-2"
+          placeholder="Category ID"
+          name="categoryId"
+          [(ngModel)]="formModel.categoryId"
+          required
+        />
+        <input
+          type="number"
+          class="border rounded px-3 py-2"
+          placeholder="Time Required (minutes)"
+          name="timeRequired"
+          [(ngModel)]="formModel.timeRequired"
+          required
+        />
+      </div>
+      <textarea
+        class="border rounded px-3 py-2 w-full mt-3"
+        placeholder="Description"
+        name="description"
+        [(ngModel)]="formModel.description"
+        required
+      ></textarea>
+      @if(formSubmitted && exerciseForm.invalid) {
+      <div class="text-red-600 mb-2">
+        <p>Please fill out all required fields before saving.</p>
+      </div>
+    }
+      <button
+        type="submit"
+        class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+      >
+        Save
+      </button>
+    </form>
