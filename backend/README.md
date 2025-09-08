@@ -67,7 +67,7 @@ SONAR_TOKEN=your-sonarqube-token
 
 ### 1.3 Generate a SonarQube Report
 
-1. navigate to the /backend directory and execute in terminal:
+1. Navigate to the /backend directory and execute in terminal:
 ```bash
 mvn clean verify sonar:sonar
 ```
